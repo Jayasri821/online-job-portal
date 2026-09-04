@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Details & AI Match Breakdown – CareerMatch AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-light">
+
+  <div id="navbar-container"></div>
+
+  <div class="container py-4 pb-5">
+    <div class="mb-3">
+      <a href="jobs.html" class="text-muted text-decoration-none small">
+        <i class="fas fa-arrow-left me-1"></i> Back to Job Search
+      </a>
+    </div>
+
+    <div id="job-details-spinner"></div>
+
+    <div id="job-content" class="d-none">
+      <!-- Job Header Card -->
+      <div class="card custom-card p-4 border-0 mb-4 shadow-sm">
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+          <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <h3 class="fw-bold mb-0" id="job-title">Job Title</h3>
+              <span id="closing-badge"></span>
+            </div>
+            <p class="text-muted mb-3" id="company-info">
+              <i class="fas fa-building me-1"></i> <span id="company-name">Company</span> &bull; 
+              <i class="fas fa-map-marker-alt ms-1 me-1"></i> <span id="job-location">Location</span> &bull; 
+              <i class="fas fa-calendar-alt ms-1 me-1"></i> Posted <span id="posted-date">Date</span>
+            </p>
+
+            <div class="d-flex flex-wrap gap-3 small text-muted">
+              <span class="badge bg-success-subtle text-success border border-success px-3 py-2 fs-6">
+                <i class="fas fa-money-bill-wave me-1"></i> <span id="salary-range">₹6–9 LPA</span>
+              </span>
+              <span class="badge bg-primary-subtle text-primary border border-primary px-3 py-2 fs-6">
+                <i class="fas fa-user-clock me-1"></i> <span id="exp-required">1 yr exp</span>
+              </span>
+              <span class="badge bg-info-subtle text-info border border-info px-3 py-2 fs-6">
+                <i class="fas fa-laptop-house me-1"></i> <span id="work-mode">Hybrid</span>
+              </span>
+              <span class="badge bg-light text-dark border px-3 py-2 fs-6">
+                <i class="fas fa-briefcase me-1"></i> <span id="job-type">Full Time</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="d-flex flex-column gap-2" style="min-width: 200px;">
+            <button id="btn-apply-main" class="btn btn-primary fw-bold py-2 rounded-pill shadow-sm" onclick="openApplyModal()">
+              <i class="fas fa-paper-plane me-2"></i> Apply Now
+            </button>
+            <a id="btn-interview-prep" href="#" class="btn btn-outline-warning text-dark fw-semibold py-2 rounded-pill">
+              <i class="fas fa-graduation-cap me-2 text-warning"></i> Prepare for Interview
+            </a>
+            <button id="btn-save-main" class="btn btn-outline-secondary btn-sm rounded-pill" onclick="toggleSaveCurrentJob()">
+              <i class="far fa-bookmark me-1"></i> Save Job
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <!-- Main Job Description -->
+        <div class="col-lg-7">
+          <div class="card custom-card p-4 border-0 mb-4">
+            <h5 class="fw-bold mb-3"><i class="fas fa-align-left text-primary me-2"></i>Job Description</h5>
+            <div id="job-description" class="text-muted mb-4" style="line-height: 1.7; white-space: pre-line;"></div>
+
+            <h5 class="fw-bold mb-3"><i class="fas fa-tasks text-primary me-2"></i>Key Responsibilities</h5>
+            <div id="job-responsibilities" class="text-muted mb-4" style="line-height: 1.7; white-space: pre-line;"></div>
+
+            <h5 class="fw-bold mb-3"><i class="fas fa-user-check text-primary me-2"></i>Qualifications & Requirements</h5>
+            <div id="job-qualifications" class="text-muted mb-4" style="line-height: 1.7; white-space: pre-line;"></div>
+
+            <h5 class="fw-bold mb-3"><i class="fas fa-code text-primary me-2"></i>Required Technical Skills</h5>
+            <div id="required-skills-container" class="d-flex flex-wrap gap-2"></div>
+          </div>
+
+          <!-- Application Strength Indicator -->
+          <div class="card custom-card p-4 border-0 mb-4 border-start border-4 border-primary">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <h5 class="fw-bold mb-0"><i class="fas fa-shield-alt text-primary me-2"></i>Application Strength Indicator</h5>
+                <p class="text-muted small mb-0">Pre-application evaluation based on candidate profile match</p>
+              </div>
+              <span id="strength-score-badge" class="badge bg-primary fs-6 px-3 py-2 rounded-pill">-- / 100</span>
+            </div>
+
+            <div class="mb-3">
+              <div class="small fw-bold text-success mb-1"><i class="fas fa-check-circle me-1"></i> Strong Points:</div>
+              <ul id="strong-points-list" class="small text-muted mb-3 ps-3"></ul>
+
+              <div class="small fw-bold text-danger mb-1"><i class="fas fa-exclamation-circle me-1"></i> Areas to Address:</div>
+              <ul id="weak-points-list" class="small text-muted mb-3 ps-3"></ul>
+
+              <div class="small fw-bold text-primary mb-1"><i class="fas fa-lightbulb me-1"></i> Tips to Stand Out:</div>
+              <ul id="strength-suggestions-list" class="small text-muted mb-0 ps-3"></ul>
+            </div>
+
+            <div class="alert alert-light border small text-muted mb-0" style="font-size: 0.75rem;">
+              <i class="fas fa-info-circle me-1"></i> <span id="strength-disclaimer">This strength score is an algorithmic estimate and does not guarantee hiring decisions.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: AI Match Engine Widgets -->
+        <div class="col-lg-5">
+          <!-- Dynamic Job Match Breakdown Card -->
+          <div class="card custom-card p-4 border-0 mb-4 sticky-top" style="top: 85px;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold mb-0"><i class="fas fa-brain text-primary me-2"></i>AI Match Score</h5>
+              <span id="overall-match-badge" class="match-badge match-high">--% Match</span>
+            </div>
+
+            <div class="text-center my-3">
+              <div class="display-5 fw-extrabold text-primary" id="match-big-percent">--%</div>
+              <div class="text-muted small fw-semibold" id="match-verdict">Calculating Profile Alignment...</div>
+            </div>
+
+            <!-- Weighted Breakdown -->
+            <div class="bg-light p-3 rounded-3 border mb-3">
+              <label class="form-label small fw-bold text-muted text-uppercase mb-2">6-Point Dynamic Breakdown</label>
+
+              <div class="mb-2">
+                <div class="d-flex justify-content-between small fw-semibold text-muted">
+                  <span>Skills Match (50% max)</span>
+                  <span id="score-skills-val">-- / 50</span>
+                </div>
+                <div class="progress" style="height: 6px;">
+                  <div id="bar-skills-match" class="progress-bar bg-primary" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="d-flex justify-content-between small fw-semibold text-muted">
+                  <span>Experience (15% max)</span>
+                  <span id="score-exp-val">-- / 15</span>
+                </div>
+                <div class="progress" style="height: 6px;">
+                  <div id="bar-exp-match" class="progress-bar bg-info" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="d-flex justify-content-between small fw-semibold text-muted">
+                  <span>Education (10% max)</span>
+                  <span id="score-edu-val">-- / 10</span>
+                </div>
+                <div class="progress" style="height: 6px;">
+                  <div id="bar-edu-match" class="progress-bar bg-success" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="d-flex justify-content-between small fw-semibold text-muted">
+                  <span>Location / Remote (10% max)</span>
+                  <span id="score-loc-val">-- / 10</span>
+                </div>
+                <div class="progress" style="height: 6px;">
+                  <div id="bar-loc-match" class="progress-bar bg-warning" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="d-flex justify-content-between small fw-semibold text-muted">
+                  <span>Salary Fit (10% max)</span>
+                  <span id="score-sal-val">-- / 10</span>
+                </div>
+                <div class="progress" style="height: 6px;">
+                  <div id="bar-sal-match" class="progress-bar bg-purple" style="background-color: #8b5cf6; width: 0%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="d-flex justify-content-between small fw-semibold text-muted">
+                  <span>Work Mode (5% max)</span>
+                  <span id="score-mode-val">-- / 5</span>
+                </div>
+                <div class="progress" style="height: 6px;">
+                  <div id="bar-mode-match" class="progress-bar bg-dark" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- "WHY THIS JOB?" Contextual Explanations -->
+            <div class="mb-3">
+              <h6 class="fw-bold text-dark mb-2"><i class="fas fa-sparkles text-warning me-1"></i> WHY THIS JOB?</h6>
+              <div id="why-this-job-container" class="d-flex flex-column gap-2">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Skill Gap Analyzer Widget -->
+            <div class="border-top pt-3">
+              <h6 class="fw-bold text-dark mb-2"><i class="fas fa-layer-group text-danger me-1"></i> Skill Gap Analyzer</h6>
+              <div class="mb-2">
+                <div class="small fw-semibold text-success mb-1">Matched Skills:</div>
+                <div id="matched-skills-box"></div>
+              </div>
+              <div class="mb-3">
+                <div class="small fw-semibold text-danger mb-1">Missing Skills:</div>
+                <div id="missing-skills-box"></div>
+              </div>
+              <div id="recommended-learning-box"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apply Modal -->
+  <div class="modal fade" id="applyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold">Submit Job Application</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted small">Applying for <strong id="modal-job-title" class="text-dark">Role</strong> at <span id="modal-company-name">Company</span></p>
+
+          <form id="apply-form">
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Cover Letter / Note to Recruiter (Optional)</label>
+              <textarea class="form-control" id="coverLetter" rows="4" placeholder="Highlight why you are passionate about this role and mention your relevant hands-on projects..."></textarea>
+            </div>
+
+            <div class="alert alert-info py-2 px-3 small border-0 bg-info-subtle text-info">
+              <i class="fas fa-file-pdf me-1"></i> Your profile resume and real-time match analysis will be attached automatically.
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" id="btn-submit-apply" class="btn btn-primary rounded-pill px-4 fw-semibold">
+                <i class="fas fa-paper-plane me-1"></i> Confirm & Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const jobId = urlParams.get('id');
+    let currentJob = null;
+    let applyModalInstance = null;
+
+    if (!jobId) {
+      window.location.href = 'jobs.html';
+    }
+
+    async function loadJobDetails() {
+      UI.showSpinner('job-details-spinner', 'Calculating AI match metrics and job insights...');
+
+      try {
+        const res = await Api.getJobById(jobId);
+        if (!res.success || !res.data) {
+          throw new Error('Job details not found');
+        }
+
+        currentJob = res.data;
+        document.getElementById('job-details-spinner').classList.add('d-none');
+        document.getElementById('job-content').classList.remove('d-none');
+
+        // Populate Main Details
+        document.getElementById('job-title').textContent = currentJob.title;
+        document.getElementById('company-name').textContent = currentJob.employer ? currentJob.employer.companyName : 'Confidential';
+        document.getElementById('job-location').textContent = currentJob.location || 'Remote';
+        document.getElementById('posted-date').textContent = UI.formatDate(currentJob.postedAt);
+        document.getElementById('salary-range').textContent = UI.formatSalaryRange(currentJob.salaryMin, currentJob.salaryMax);
+        document.getElementById('exp-required').textContent = (currentJob.experienceYears || 0) + ' yrs exp';
+        document.getElementById('work-mode').textContent = currentJob.workMode ? currentJob.workMode.replace('_', ' ') : 'Hybrid';
+        document.getElementById('job-type').textContent = currentJob.jobType ? currentJob.jobType.replace('_', ' ') : 'Full Time';
+
+        document.getElementById('job-description').textContent = currentJob.description;
+        document.getElementById('job-responsibilities').textContent = currentJob.responsibilities || 'Standard role responsibilities';
+        document.getElementById('job-qualifications').textContent = currentJob.qualifications || 'Standard degree and skill qualifications';
+
+        // Closing Badge
+        document.getElementById('closing-badge').innerHTML = UI.getDeadlineBadge(currentJob.daysLeft, currentJob.isClosingSoon);
+
+        // Required Skills Tag Pills
+        const skillsContainer = document.getElementById('required-skills-container');
+        skillsContainer.innerHTML = (currentJob.requiredSkillsList || []).map(s => `
+          <span class="badge bg-light text-dark border p-2 fs-6">
+            <i class="fas fa-tag text-primary me-1"></i> ${s}
+          </span>
+        `).join('');
+
+        // Buttons state
+        if (currentJob.hasApplied) {
+          const btn = document.getElementById('btn-apply-main');
+          btn.disabled = true;
+          btn.className = 'btn btn-success fw-bold py-2 rounded-pill';
+          btn.innerHTML = `<i class="fas fa-check-circle me-1"></i> Applied (${currentJob.applicationStatus})`;
+        }
+
+        if (currentJob.isSaved) {
+          const saveBtn = document.getElementById('btn-save-main');
+          saveBtn.innerHTML = '<i class="fas fa-bookmark text-primary me-1"></i> Saved';
+        }
+
+        document.getElementById('btn-interview-prep').href = `interview.html?jobId=${currentJob.id}`;
+
+        // Load AI Match & Breakdown
+        loadMatchBreakdown();
+        loadSkillGap();
+        loadApplicationStrength();
+
+        // Check if query had ?action=apply
+        if (urlParams.get('action') === 'apply' && !currentJob.hasApplied) {
+          openApplyModal();
+        }
+      } catch (err) {
+        document.getElementById('job-details-spinner').innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
+      }
+    }
+
+    async function loadMatchBreakdown() {
+      try {
+        const res = await Api.getJobMatchScore(jobId);
+        if (res.success && res.data) {
+          const m = res.data;
+          document.getElementById('overall-match-badge').outerHTML = UI.getMatchBadge(m.overallMatchScore);
+          document.getElementById('match-big-percent').textContent = m.overallMatchScore + '%';
+          document.getElementById('match-verdict').textContent = m.matchVerdict;
+
+          document.getElementById('score-skills-val').textContent = `${m.skillsScore} / 50`;
+          document.getElementById('bar-skills-match').style.width = `${(m.skillsScore / 50) * 100}%`;
+
+          document.getElementById('score-exp-val').textContent = `${m.experienceScore} / 15`;
+          document.getElementById('bar-exp-match').style.width = `${(m.experienceScore / 15) * 100}%`;
+
+          document.getElementById('score-edu-val').textContent = `${m.educationScore} / 10`;
+          document.getElementById('bar-edu-match').style.width = `${(m.educationScore / 10) * 100}%`;
+
+          document.getElementById('score-loc-val').textContent = `${m.locationScore} / 10`;
+          document.getElementById('bar-loc-match').style.width = `${(m.locationScore / 10) * 100}%`;
+
+          document.getElementById('score-sal-val').textContent = `${m.salaryScore} / 10`;
+          document.getElementById('bar-sal-match').style.width = `${(m.salaryScore / 10) * 100}%`;
+
+          document.getElementById('score-mode-val').textContent = `${m.workModeScore} / 5`;
+          document.getElementById('bar-mode-match').style.width = `${(m.workModeScore / 5) * 100}%`;
+
+          // Why this job explanations
+          const whyBox = document.getElementById('why-this-job-container');
+          whyBox.innerHTML = (m.whyThisJobExplanations || []).map(exp => `
+            <div class="d-flex align-items-start gap-2 small text-dark bg-light p-2 rounded border">
+              <i class="fas fa-check text-success mt-1"></i>
+              <span>${exp}</span>
+            </div>
+          `).join('');
+        }
+      } catch (err) {
+        console.warn('Could not load detailed match:', err);
+      }
+    }
+
+    async function loadSkillGap() {
+      try {
+        const res = await Api.getSkillGap(jobId);
+        if (res.success && res.data) {
+          const gap = res.data;
+          document.getElementById('matched-skills-box').innerHTML = (gap.matchedSkills || []).map(s => `<span class="skill-pill skill-matched">✓ ${s}</span>`).join('') || '<span class="text-muted small">None yet</span>';
+          document.getElementById('missing-skills-box').innerHTML = (gap.missingSkills || []).map(s => `<span class="skill-pill skill-missing">✗ ${s}</span>`).join('') || '<span class="text-success small fw-semibold">No missing skills! Full 100% technical match.</span>';
+
+          const recBox = document.getElementById('recommended-learning-box');
+          if (gap.recommendedSkillsToLearn && gap.recommendedSkillsToLearn.length > 0) {
+            recBox.innerHTML = `
+              <div class="small fw-semibold text-primary mb-2">Recommended Learning Roadmap:</div>
+              <div class="d-flex flex-column gap-2">
+                ${gap.recommendedSkillsToLearn.map(rec => `
+                  <div class="p-2 rounded border bg-light small">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                      <span class="fw-bold">${rec.skillName}</span>
+                      <span class="badge ${rec.priority === 'HIGH' ? 'bg-danger-subtle text-danger' : 'bg-warning-subtle text-warning'}">${rec.priority} Priority</span>
+                    </div>
+                    <div class="text-muted mb-1" style="font-size: 0.75rem;">${rec.reason}</div>
+                    <a href="${rec.learningResource}" target="_blank" class="text-primary text-decoration-none fw-semibold" style="font-size: 0.75rem;">
+                      Study Resources <i class="fas fa-external-link-alt ms-1"></i>
+                    </a>
+                  </div>
+                `).join('')}
+              </div>
+            `;
+          }
+        }
+      } catch (err) {
+        console.warn('Could not load skill gap:', err);
+      }
+    }
+
+    async function loadApplicationStrength() {
+      try {
+        const res = await Api.getApplicationStrength(jobId);
+        if (res.success && res.data) {
+          const st = res.data;
+          document.getElementById('strength-score-badge').textContent = `Strength: ${st.strengthScore} / 100 (${st.verdict})`;
+
+          document.getElementById('strong-points-list').innerHTML = (st.strongPoints || []).map(p => `<li>${p}</li>`).join('');
+          document.getElementById('weak-points-list').innerHTML = (st.weakPoints || []).map(p => `<li>${p}</li>`).join('') || '<li>None identified</li>';
+          document.getElementById('strength-suggestions-list').innerHTML = (st.improvementSuggestions || []).map(p => `<li>${p}</li>`).join('') || '<li>Ready to submit!</li>';
+          document.getElementById('strength-disclaimer').textContent = st.disclaimer;
+        }
+      } catch (err) {
+        console.warn('Could not load strength score:', err);
+      }
+    }
+
+    function openApplyModal() {
+      if (!Auth.isLoggedIn()) {
+        window.location.href = `login.html?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+        return;
+      }
+      document.getElementById('modal-job-title').textContent = currentJob.title;
+      document.getElementById('modal-company-name').textContent = currentJob.employer ? currentJob.employer.companyName : '';
+      applyModalInstance = new bootstrap.Modal(document.getElementById('applyModal'));
+      applyModalInstance.show();
+    }
+
+    document.getElementById('apply-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById('btn-submit-apply');
+      const coverLetter = document.getElementById('coverLetter').value.trim();
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Submitting...';
+
+      try {
+        const res = await Api.applyForJob({
+          jobId: currentJob.id,
+          coverLetter: coverLetter
+        });
+        if (res.success) {
+          applyModalInstance.hide();
+          UI.showToast('🎉 Application submitted successfully! Track it in your Applications dashboard.', 'success');
+          setTimeout(() => {
+            window.location.href = 'applications.html';
+          }, 1000);
+        } else {
+          throw new Error(res.message || 'Application submission failed');
+        }
+      } catch (err) {
+        UI.showToast(err.message, 'error');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane me-1"></i> Confirm & Submit';
+      }
+    });
+
+    async function toggleSaveCurrentJob() {
+      if (!Auth.isLoggedIn()) {
+        window.location.href = 'login.html';
+        return;
+      }
+      try {
+        if (currentJob.isSaved) {
+          await Api.unsaveJob(currentJob.id);
+          currentJob.isSaved = false;
+          document.getElementById('btn-save-main').innerHTML = '<i class="far fa-bookmark me-1"></i> Save Job';
+          UI.showToast('Job removed from bookmarks', 'info');
+        } else {
+          await Api.saveJob(currentJob.id);
+          currentJob.isSaved = true;
+          document.getElementById('btn-save-main').innerHTML = '<i class="fas fa-bookmark text-primary me-1"></i> Saved';
+          UI.showToast('Job saved to your bookmarks!', 'success');
+        }
+      } catch (err) {
+        UI.showToast(err.message, 'error');
+      }
+    }
+
+    loadJobDetails();
+  </script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application Tracker & Kanban – CareerMatch AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-light">
+
+  <div id="navbar-container"></div>
+
+  <div class="container-fluid px-lg-5 py-4 pb-5">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+      <div>
+        <h2 class="fw-bold mb-1">Visual Application Tracker</h2>
+        <p class="text-muted small mb-0">Track where each job submission stands across interview pipelines in real time.</p>
+      </div>
+      <div class="d-flex gap-2">
+        <a href="jobs.html" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">
+          <i class="fas fa-plus-circle me-1"></i> Apply for More Jobs
+        </a>
+      </div>
+    </div>
+
+    <!-- Visual Kanban Pipeline -->
+    <div class="kanban-board" id="kanban-container">
+      <!-- 1. APPLIED -->
+      <div class="kanban-col">
+        <div class="kanban-col-header text-primary">
+          <span><i class="fas fa-paper-plane me-1"></i> Applied</span>
+          <span class="badge bg-primary rounded-pill" id="count-APPLIED">0</span>
+        </div>
+        <div id="col-APPLIED" class="d-flex flex-column gap-2"></div>
+      </div>
+
+      <!-- 2. ASSESSMENT -->
+      <div class="kanban-col">
+        <div class="kanban-col-header text-info">
+          <span><i class="fas fa-laptop-code me-1"></i> Assessment</span>
+          <span class="badge bg-info rounded-pill text-white" id="count-ASSESSMENT">0</span>
+        </div>
+        <div id="col-ASSESSMENT" class="d-flex flex-column gap-2"></div>
+      </div>
+
+      <!-- 3. INTERVIEW -->
+      <div class="kanban-col">
+        <div class="kanban-col-header text-warning">
+          <span><i class="fas fa-comments me-1"></i> Interview</span>
+          <span class="badge bg-warning rounded-pill text-dark" id="count-INTERVIEW">0</span>
+        </div>
+        <div id="col-INTERVIEW" class="d-flex flex-column gap-2"></div>
+      </div>
+
+      <!-- 4. SHORTLISTED -->
+      <div class="kanban-col">
+        <div class="kanban-col-header text-purple" style="color: #8b5cf6;">
+          <span><i class="fas fa-star me-1"></i> Shortlisted</span>
+          <span class="badge rounded-pill text-white" style="background-color: #8b5cf6;" id="count-SHORTLISTED">0</span>
+        </div>
+        <div id="col-SHORTLISTED" class="d-flex flex-column gap-2"></div>
+      </div>
+
+      <!-- 5. SELECTED -->
+      <div class="kanban-col">
+        <div class="kanban-col-header text-success">
+          <span><i class="fas fa-trophy me-1"></i> Selected / Offer</span>
+          <span class="badge bg-success rounded-pill" id="count-SELECTED">0</span>
+        </div>
+        <div id="col-SELECTED" class="d-flex flex-column gap-2"></div>
+      </div>
+
+      <!-- 6. REJECTED -->
+      <div class="kanban-col">
+        <div class="kanban-col-header text-danger">
+          <span><i class="fas fa-times-circle me-1"></i> Rejected</span>
+          <span class="badge bg-danger rounded-pill" id="count-REJECTED">0</span>
+        </div>
+        <div id="col-REJECTED" class="d-flex flex-column gap-2"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Detail Modal -->
+  <div class="modal fade" id="appDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold" id="modal-app-title">Application Status</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="modal-app-body">
+          <!-- Dynamic Content -->
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+          <a id="btn-modal-prep" href="#" class="btn btn-warning rounded-pill px-4 text-dark fw-semibold">
+            <i class="fas fa-graduation-cap me-1"></i> Open Interview Prep
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    if (!Auth.requireAuth(['JOB_SEEKER'])) {
+      // redirected
+    }
+
+    let applicationList = [];
+    let modalInstance = null;
+
+    async function loadApplications() {
+      try {
+        const res = await Api.getMyApplications();
+        if (res.success && res.data) {
+          applicationList = res.data;
+          renderKanban(applicationList);
+        }
+      } catch (err) {
+        UI.showToast('Failed to load applications: ' + err.message, 'error');
+      }
+    }
+
+    function renderKanban(apps) {
+      const statuses = ['APPLIED', 'ASSESSMENT', 'INTERVIEW', 'SHORTLISTED', 'SELECTED', 'REJECTED'];
+      const counts = {};
+
+      statuses.forEach(st => {
+        counts[st] = 0;
+        const col = document.getElementById(`col-${st}`);
+        if (col) col.innerHTML = '';
+      });
+
+      apps.forEach(app => {
+        const st = app.status || 'APPLIED';
+        counts[st] = (counts[st] || 0) + 1;
+        const col = document.getElementById(`col-${st}`);
+        if (!col) return;
+
+        const card = document.createElement('div');
+        card.className = 'kanban-card';
+        card.onclick = () => viewApplicationDetails(app.id);
+
+        const matchScore = app.matchScore ? Math.round(app.matchScore) : (app.job ? app.job.matchScore : 85);
+        const matchBadge = UI.getMatchBadge(matchScore);
+
+        card.innerHTML = `
+          <div class="d-flex justify-content-between align-items-start mb-1">
+            <h6 class="fw-bold text-dark mb-0">${app.job ? app.job.title : 'Job Opening'}</h6>
+          </div>
+          <div class="text-muted small mb-2">
+            <i class="fas fa-building me-1"></i> ${app.job && app.job.employer ? app.job.employer.companyName : 'Company'}
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top">
+            ${matchBadge}
+            <span class="small text-muted" style="font-size: 0.75rem;">${UI.formatDate(app.appliedAt)}</span>
+          </div>
+
+          ${app.recruiterNotes ? `
+            <div class="mt-2 p-2 bg-light rounded small border text-truncate" style="font-size: 0.75rem;">
+              <i class="fas fa-sticky-note text-warning me-1"></i> ${app.recruiterNotes}
+            </div>
+          ` : ''}
+        `;
+
+        col.appendChild(card);
+      });
+
+      statuses.forEach(st => {
+        const countBadge = document.getElementById(`count-${st}`);
+        if (countBadge) countBadge.textContent = counts[st] || 0;
+      });
+    }
+
+    function viewApplicationDetails(appId) {
+      const app = applicationList.find(a => a.id === appId);
+      if (!app) return;
+
+      document.getElementById('modal-app-title').textContent = `${app.job ? app.job.title : 'Job'} Application`;
+      document.getElementById('btn-modal-prep').href = `interview.html?jobId=${app.job ? app.job.id : 1}`;
+
+      const matchScore = app.matchScore ? Math.round(app.matchScore) : 85;
+
+      document.getElementById('modal-app-body').innerHTML = `
+        <div class="mb-3">
+          <div class="text-muted small">Company</div>
+          <div class="fw-bold fs-6">${app.job && app.job.employer ? app.job.employer.companyName : 'Company'} (${app.job ? app.job.location : 'Remote'})</div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <div class="p-2 rounded bg-light border">
+              <div class="small text-muted">Current Status</div>
+              <div class="fw-bold text-primary">${app.status}</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="p-2 rounded bg-light border">
+              <div class="small text-muted">Match Score</div>
+              <div class="fw-bold text-success">${matchScore}% Match</div>
+            </div>
+          </div>
+        </div>
+
+        ${app.recruiterNotes ? `
+          <div class="alert alert-warning py-2 mb-3 small">
+            <i class="fas fa-comment-dots me-1"></i> <strong>Recruiter Feedback / Notes:</strong><br>
+            ${app.recruiterNotes}
+          </div>
+        ` : ''}
+
+        ${app.coverLetter ? `
+          <div class="mb-2">
+            <div class="small fw-bold text-dark">Cover Letter Attached:</div>
+            <p class="small text-muted bg-light p-2 rounded border">${app.coverLetter}</p>
+          </div>
+        ` : ''}
+
+        <div class="small text-muted">
+          <i class="fas fa-clock me-1"></i> Submitted on: ${UI.formatDate(app.appliedAt)}
+        </div>
+      `;
+
+      modalInstance = new bootstrap.Modal(document.getElementById('appDetailsModal'));
+      modalInstance.show();
+    }
+
+    loadApplications();
+  </script>
+</body>
+</html>

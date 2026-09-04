@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Manager & ATS Preview – CareerMatch AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .drop-zone {
+      border: 2px dashed var(--primary);
+      background: #f8fafc;
+      border-radius: var(--border-radius);
+      padding: 3rem 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .drop-zone:hover {
+      background: #eff6ff;
+    }
+    .resume-preview-box {
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 2.5rem;
+      font-family: 'Inter', sans-serif;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+  <div id="navbar-container"></div>
+
+  <div class="container py-4 pb-5">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+      <div>
+        <h2 class="fw-bold mb-1">Resume Manager & ATS Formatter</h2>
+        <p class="text-muted small mb-0">Upload your PDF resume or preview your auto-generated ATS-friendly structured resume.</p>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="window.print()">
+          <i class="fas fa-print me-1"></i> Print / Save ATS PDF
+        </button>
+        <a href="profile.html" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+          <i class="fas fa-edit me-1"></i> Edit Profile Data
+        </a>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- Left: Resume Upload & ATS Score -->
+      <div class="col-lg-5">
+        <div class="card custom-card p-4 border-0 shadow-sm mb-4">
+          <h5 class="fw-bold text-dark mb-3"><i class="fas fa-cloud-upload-alt text-primary me-2"></i>Upload PDF Resume</h5>
+
+          <div class="drop-zone mb-3" onclick="document.getElementById('file-input').click()">
+            <input type="file" id="file-input" class="d-none" accept=".pdf,.doc,.docx" onchange="handleFileUpload(event)">
+            <i class="fas fa-file-pdf fs-1 text-primary mb-2"></i>
+            <h6 class="fw-bold text-dark mb-1">Click to browse or drag & drop PDF</h6>
+            <p class="small text-muted mb-0">Supported formats: PDF, DOC, DOCX (Max 10MB)</p>
+          </div>
+
+          <div id="upload-status" class="alert alert-info d-none small py-2"></div>
+
+          <div id="current-file-box" class="p-3 bg-light rounded-3 border d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+              <i class="fas fa-file-alt text-danger fs-3"></i>
+              <div>
+                <div class="fw-bold small text-dark" id="resume-filename">No resume uploaded yet</div>
+                <div class="small text-muted" id="resume-upload-status">Upload a PDF to boost profile visibility</div>
+              </div>
+            </div>
+            <a id="btn-view-pdf" href="#" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill d-none">
+              <i class="fas fa-external-link-alt"></i> View
+            </a>
+          </div>
+        </div>
+
+        <!-- ATS Readiness Meter -->
+        <div class="card custom-card p-4 border-0 shadow-sm">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-dark mb-0"><i class="fas fa-check-circle text-success me-2"></i>ATS Optimization Score</h5>
+            <span class="badge bg-success-subtle text-success fs-6" id="ats-score">88 / 100</span>
+          </div>
+          <p class="text-muted small mb-3">
+            Our parser inspects key headings, keywords, clean font hierarchy, and structured sections to ensure maximum parse rate by recruiter applicant tracking systems.
+          </p>
+
+          <ul class="list-unstyled small text-muted d-flex flex-column gap-2 mb-0">
+            <li><i class="fas fa-check text-success me-2"></i> Standard Section Headings (Education, Skills, Experience)</li>
+            <li><i class="fas fa-check text-success me-2"></i> Clean ATS Parseable Layout (No complex tables/graphics)</li>
+            <li><i class="fas fa-check text-success me-2"></i> Keyword Rich Technical Skills</li>
+            <li><i class="fas fa-check text-success me-2"></i> Clear Contact and Location Information</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Right: Live ATS Resume Preview -->
+      <div class="col-lg-7">
+        <div class="resume-preview-box">
+          <div class="text-center border-bottom pb-3 mb-3">
+            <h3 class="fw-bold text-dark mb-1" id="preview-name">Jayasri</h3>
+            <p class="text-muted small mb-1" id="preview-contact">
+              <span id="preview-email">seeker@careermatch.com</span> &bull; 
+              <span id="preview-phone">+91 9811122233</span> &bull; 
+              <span id="preview-location">Hyderabad, India</span>
+            </p>
+            <p class="text-primary small fw-semibold mb-0" id="preview-role">Java Full Stack Developer</p>
+          </div>
+
+          <!-- Career Objective -->
+          <div class="mb-3">
+            <h6 class="fw-bold text-uppercase border-bottom pb-1 text-dark" style="font-size: 0.85rem; letter-spacing: 0.5px;">Career Objective</h6>
+            <p class="small text-muted mb-0" id="preview-objective" style="line-height: 1.6;">
+              Motivated Computer Science graduate with strong hands-on experience in Java, Spring Boot microservices, relational databases, and REST APIs, seeking a Full Stack Developer role.
+            </p>
+          </div>
+
+          <!-- Technical Skills -->
+          <div class="mb-3">
+            <h6 class="fw-bold text-uppercase border-bottom pb-1 text-dark" style="font-size: 0.85rem; letter-spacing: 0.5px;">Technical Skills</h6>
+            <div id="preview-skills" class="small text-dark fw-medium">
+              Java, Spring Boot, SQL, MySQL, REST API, HTML, CSS, JavaScript, Git
+            </div>
+          </div>
+
+          <!-- Education -->
+          <div class="mb-3">
+            <h6 class="fw-bold text-uppercase border-bottom pb-1 text-dark" style="font-size: 0.85rem; letter-spacing: 0.5px;">Education</h6>
+            <div class="d-flex justify-content-between small fw-bold text-dark">
+              <span id="preview-degree">B.Tech Computer Science</span>
+              <span id="preview-year">2025</span>
+            </div>
+            <div class="small text-muted" id="preview-college">Jawaharlal Nehru Technological University</div>
+          </div>
+
+          <!-- Projects -->
+          <div class="mb-3">
+            <h6 class="fw-bold text-uppercase border-bottom pb-1 text-dark" style="font-size: 0.85rem; letter-spacing: 0.5px;">Projects</h6>
+            <div class="small text-dark" id="preview-projects" style="white-space: pre-line; line-height: 1.6;">
+              1. Online E-Commerce Platform (Java, Spring Boot, MySQL, REST API)
+              2. Real-time Chat App (WebSocket, Spring Boot, HTML5/CSS3)
+              3. Automated Task Tracker (Java, JDBC, Bootstrap)
+            </div>
+          </div>
+
+          <!-- Certifications -->
+          <div class="mb-3">
+            <h6 class="fw-bold text-uppercase border-bottom pb-1 text-dark" style="font-size: 0.85rem; letter-spacing: 0.5px;">Certifications</h6>
+            <div class="small text-muted" id="preview-certifications" style="white-space: pre-line;">
+              Oracle Certified Associate Java SE 8, Spring Professional Foundations
+            </div>
+          </div>
+
+          <!-- Internships & Experience -->
+          <div>
+            <h6 class="fw-bold text-uppercase border-bottom pb-1 text-dark" style="font-size: 0.85rem; letter-spacing: 0.5px;">Experience & Internships</h6>
+            <div class="small text-muted" id="preview-internships" style="white-space: pre-line;">
+              Backend Developer Intern at SoftSolutions Inc (6 months) - Built REST APIs and optimized database queries.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    if (!Auth.requireAuth(['JOB_SEEKER'])) {
+      // redirected
+    }
+
+    async function loadResumeData() {
+      try {
+        const res = await Api.getSeekerProfile();
+        if (res.success && res.data) {
+          const p = res.data;
+          if (p.fullName) document.getElementById('preview-name').textContent = p.fullName;
+          if (p.email) document.getElementById('preview-email').textContent = p.email;
+          if (p.phone) document.getElementById('preview-phone').textContent = p.phone;
+          if (p.preferredLocation) document.getElementById('preview-location').textContent = p.preferredLocation;
+          if (p.preferredRole) document.getElementById('preview-role').textContent = p.preferredRole;
+          if (p.careerObjective) document.getElementById('preview-objective').textContent = p.careerObjective;
+          if (p.skills) document.getElementById('preview-skills').textContent = p.skills;
+          if (p.degree) document.getElementById('preview-degree').textContent = p.degree;
+          if (p.graduationYear) document.getElementById('preview-year').textContent = p.graduationYear;
+          if (p.education) document.getElementById('preview-college').textContent = p.education;
+          if (p.projects) document.getElementById('preview-projects').textContent = p.projects;
+          if (p.certifications) document.getElementById('preview-certifications').textContent = p.certifications;
+          if (p.internships) document.getElementById('preview-internships').textContent = p.internships;
+
+          if (p.resumeUrl) {
+            document.getElementById('resume-filename').textContent = p.resumeOriginalName || 'Attached_Resume.pdf';
+            document.getElementById('resume-upload-status').textContent = 'Active on candidate profile';
+            const btn = document.getElementById('btn-view-pdf');
+            btn.href = 'http://localhost:8080' + p.resumeUrl;
+            btn.classList.remove('d-none');
+          }
+        }
+      } catch (err) {
+        UI.showToast('Failed to load profile data: ' + err.message, 'error');
+      }
+    }
+
+    async function handleFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const statusBox = document.getElementById('upload-status');
+      statusBox.textContent = `Uploading ${file.name}...`;
+      statusBox.classList.remove('d-none');
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const res = await Api.uploadResume(formData);
+        if (res.success && res.data) {
+          statusBox.textContent = '✓ Resume uploaded and attached to profile successfully!';
+          statusBox.className = 'alert alert-success small py-2';
+          UI.showToast('Resume uploaded successfully!', 'success');
+          loadResumeData();
+        } else {
+          throw new Error(res.message || 'Upload failed');
+        }
+      } catch (err) {
+        statusBox.textContent = 'Upload error: ' + err.message;
+        statusBox.className = 'alert alert-danger small py-2';
+      }
+    }
+
+    loadResumeData();
+  </script>
+</body>
+</html>

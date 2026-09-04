@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-Time Interview & MCQ Preparation Hub – CareerMatch AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .test-timer {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .question-btn {
+      width: 38px;
+      height: 38px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .question-btn.answered {
+      background-color: #10b981 !important;
+      color: white !important;
+      border-color: #10b981 !important;
+    }
+    .question-btn.flagged {
+      background-color: #f59e0b !important;
+      color: white !important;
+      border-color: #f59e0b !important;
+    }
+    .question-btn.active-q {
+      border: 2px solid #4f46e5 !important;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25);
+    }
+    .mcq-option {
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: white;
+    }
+    .mcq-option:hover {
+      border-color: #4f46e5;
+      background-color: #f8fafc;
+    }
+    .mcq-option.selected {
+      border-color: #4f46e5;
+      background-color: #eef2ff;
+      color: #312e81;
+      font-weight: 600;
+    }
+    .flashcard {
+      border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .flashcard:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px -5px rgba(0,0,0,0.08);
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+  <div id="navbar-container"></div>
+
+  <!-- Hero Header -->
+  <header class="bg-dark text-white py-4 border-bottom shadow-sm">
+    <div class="container">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div>
+          <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-primary bg-opacity-25 border border-primary border-opacity-50 text-info small fw-bold mb-2">
+            <i class="fas fa-bolt text-warning"></i> Real-Time Candidate Assessment & Interview Kit
+          </div>
+          <h2 class="fw-bold mb-1">Interview & MCQ Preparation Hub</h2>
+          <p class="text-light text-opacity-75 small mb-0">
+            Practice real-time timed MCQ assessments, AI simulated mock interviews, and tailored technical question banks.
+          </p>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="jobs.html" class="btn btn-outline-light btn-sm rounded-pill px-3">
+            <i class="fas fa-briefcase me-1"></i> Browse Target Jobs
+          </a>
+          <a href="dashboard.html" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">
+            <i class="fas fa-chart-line me-1"></i> My Dashboard
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container py-4 pb-5">
+
+    <!-- Mode Selector Navigation -->
+    <ul class="nav nav-pills mb-4 bg-white p-2 rounded-pill border shadow-sm" id="prepNav" role="tablist">
+      <li class="nav-item flex-fill text-center">
+        <button class="nav-link active rounded-pill fw-bold py-2" id="nav-mcq-tab" data-bs-toggle="pill" data-bs-target="#panel-mcq" type="button">
+          <i class="fas fa-stopwatch me-2 text-danger"></i> Real-Time MCQ Mock Tests
+        </button>
+      </li>
+      <li class="nav-item flex-fill text-center">
+        <button class="nav-link rounded-pill fw-bold py-2" id="nav-ai-tab" data-bs-toggle="pill" data-bs-target="#panel-ai" type="button">
+          <i class="fas fa-robot me-2 text-primary"></i> AI Virtual Mock Interview
+        </button>
+      </li>
+      <li class="nav-item flex-fill text-center">
+        <button class="nav-link rounded-pill fw-bold py-2" id="nav-qna-tab" data-bs-toggle="pill" data-bs-target="#panel-qna" type="button">
+          <i class="fas fa-book-open me-2 text-success"></i> Technical & Behavioral Flashcards
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="prepTabContent">
+
+      <!-- ========================================== -->
+      <!-- TAB 1: REAL-TIME MCQ TESTS -->
+      <!-- ========================================== -->
+      <div class="tab-pane fade show active" id="panel-mcq">
+
+        <!-- 1.1 Test Selection View -->
+        <div id="mcq-select-view">
+          <div class="row g-4 mb-4">
+            <!-- Test Card 1: Java & Spring Boot -->
+            <div class="col-md-6 col-lg-3">
+              <div class="card custom-card h-100 p-4 border-top border-4 border-primary shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <span class="badge bg-primary-subtle text-primary fw-bold">Full Stack</span>
+                  <span class="small text-muted"><i class="far fa-clock me-1"></i> 10 Mins</span>
+                </div>
+                <h5 class="fw-bold mb-2">Java & Spring Boot Core</h5>
+                <p class="text-muted small mb-3">
+                  Collections, Multithreading, Spring Boot REST APIs, Dependency Injection, and JPA.
+                </p>
+                <div class="mt-auto">
+                  <div class="small text-muted mb-2"><i class="fas fa-list-ol me-1 text-primary"></i> 10 Questions &bull; 80% Pass Mark</div>
+                  <button class="btn btn-primary w-100 rounded-pill fw-semibold" onclick="startMcqTest('java')">
+                    <i class="fas fa-play me-1"></i> Start Assessment
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Test Card 2: React & Frontend -->
+            <div class="col-md-6 col-lg-3">
+              <div class="card custom-card h-100 p-4 border-top border-4 border-info shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <span class="badge bg-info-subtle text-info fw-bold">Frontend</span>
+                  <span class="small text-muted"><i class="far fa-clock me-1"></i> 10 Mins</span>
+                </div>
+                <h5 class="fw-bold mb-2">React & Modern JavaScript</h5>
+                <p class="text-muted small mb-3">
+                  React Hooks, State Lifecycle, ES6+ Closures, Async/Await, and Virtual DOM.
+                </p>
+                <div class="mt-auto">
+                  <div class="small text-muted mb-2"><i class="fas fa-list-ol me-1 text-info"></i> 10 Questions &bull; 80% Pass Mark</div>
+                  <button class="btn btn-info text-white w-100 rounded-pill fw-semibold" onclick="startMcqTest('react')">
+                    <i class="fas fa-play me-1"></i> Start Assessment
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Test Card 3: SQL & Database -->
+            <div class="col-md-6 col-lg-3">
+              <div class="card custom-card h-100 p-4 border-top border-4 border-success shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <span class="badge bg-success-subtle text-success fw-bold">Database</span>
+                  <span class="small text-muted"><i class="far fa-clock me-1"></i> 10 Mins</span>
+                </div>
+                <h5 class="fw-bold mb-2">SQL & Database Optimization</h5>
+                <p class="text-muted small mb-3">
+                  Complex Joins, Indexing, B-Trees, Normalization, ACID Transactions, and Query Plans.
+                </p>
+                <div class="mt-auto">
+                  <div class="small text-muted mb-2"><i class="fas fa-list-ol me-1 text-success"></i> 10 Questions &bull; 80% Pass Mark</div>
+                  <button class="btn btn-success w-100 rounded-pill fw-semibold" onclick="startMcqTest('sql')">
+                    <i class="fas fa-play me-1"></i> Start Assessment
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Test Card 4: Cloud & AWS -->
+            <div class="col-md-6 col-lg-3">
+              <div class="card custom-card h-100 p-4 border-top border-4 border-warning shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <span class="badge bg-warning-subtle text-warning fw-bold">Cloud & DevOps</span>
+                  <span class="small text-muted"><i class="far fa-clock me-1"></i> 10 Mins</span>
+                </div>
+                <h5 class="fw-bold mb-2">Cloud, AWS & Microservices</h5>
+                <p class="text-muted small mb-3">
+                  Docker Containers, Kubernetes, AWS S3/EC2, CI/CD Pipelines, and Microservices.
+                </p>
+                <div class="mt-auto">
+                  <div class="small text-muted mb-2"><i class="fas fa-list-ol me-1 text-warning"></i> 10 Questions &bull; 80% Pass Mark</div>
+                  <button class="btn btn-warning text-dark w-100 rounded-pill fw-semibold" onclick="startMcqTest('cloud')">
+                    <i class="fas fa-play me-1"></i> Start Assessment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1.2 Live Active Test Container (Hidden initially) -->
+        <div id="mcq-active-view" class="d-none">
+          <div class="row g-4">
+            <!-- Main Question Area -->
+            <div class="col-lg-8">
+              <div class="card custom-card p-4 border-0 shadow-sm">
+                <!-- Test Header -->
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+                  <div>
+                    <h5 class="fw-bold mb-0 text-primary" id="test-title-text">Java & Spring Boot Assessment</h5>
+                    <span class="small text-muted" id="question-index-badge">Question 1 of 10</span>
+                  </div>
+                  <div class="d-flex align-items-center gap-2 bg-dark text-white px-3 py-1 rounded-pill test-timer shadow-sm">
+                    <i class="fas fa-stopwatch text-danger"></i>
+                    <span id="test-countdown">10:00</span>
+                  </div>
+                </div>
+
+                <!-- Active Question -->
+                <div class="mb-4">
+                  <h5 class="fw-bold text-dark lh-base mb-3" id="active-question-text">Question content will appear here...</h5>
+                  <div id="active-options-container" class="d-flex flex-column gap-2"></div>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center border-top pt-3 gap-2">
+                  <div class="d-flex gap-2">
+                    <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="prevQuestion()" id="btn-prev-q">
+                      <i class="fas fa-arrow-left me-1"></i> Previous
+                    </button>
+                    <button class="btn btn-outline-warning btn-sm rounded-pill px-3 text-dark" onclick="toggleFlagCurrentQuestion()" id="btn-flag-q">
+                      <i class="far fa-flag me-1"></i> Mark for Review
+                    </button>
+                    <button class="btn btn-light btn-sm rounded-pill text-muted px-2" onclick="clearCurrentAnswer()">
+                      Clear Choice
+                    </button>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <button class="btn btn-primary btn-sm rounded-pill px-4 fw-bold" onclick="nextQuestion()" id="btn-next-q">
+                      Next <i class="fas fa-arrow-right ms-1"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm rounded-pill px-4 fw-bold" onclick="submitTest()">
+                      <i class="fas fa-check-circle me-1"></i> Finish & Submit
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Question Palette -->
+            <div class="col-lg-4">
+              <div class="card custom-card p-4 border-0 shadow-sm sticky-top" style="top: 85px;">
+                <h6 class="fw-bold mb-3"><i class="fas fa-th me-2 text-primary"></i>Question Matrix</h6>
+                <div id="question-palette" class="d-flex flex-wrap gap-2 mb-4"></div>
+
+                <div class="small text-muted border-top pt-3">
+                  <div class="d-flex align-items-center gap-2 mb-1">
+                    <span class="badge bg-success" style="width: 14px; height: 14px; padding: 0;">&nbsp;</span>
+                    <span>Answered (<span id="count-answered">0</span>)</span>
+                  </div>
+                  <div class="d-flex align-items-center gap-2 mb-1">
+                    <span class="badge bg-warning" style="width: 14px; height: 14px; padding: 0;">&nbsp;</span>
+                    <span>Marked for Review (<span id="count-flagged">0</span>)</span>
+                  </div>
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-secondary" style="width: 14px; height: 14px; padding: 0;">&nbsp;</span>
+                    <span>Unanswered (<span id="count-unanswered">10</span>)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1.3 Test Result Scorecard (Hidden initially) -->
+        <div id="mcq-result-view" class="d-none">
+          <div class="card custom-card p-4 p-md-5 border-0 shadow-lg text-center mb-4">
+            <div class="d-inline-flex align-items-center justify-content-center p-3 rounded-circle mx-auto mb-3" id="result-icon-box" style="width: 80px; height: 80px;">
+              <i class="fas fa-trophy fs-1"></i>
+            </div>
+            <h3 class="fw-extrabold mb-1" id="result-status-title">Assessment Completed!</h3>
+            <p class="text-muted small mb-4" id="result-status-subtitle">Here is your verified performance scorecard</p>
+
+            <div class="row g-3 justify-content-center mb-4">
+              <div class="col-6 col-md-3">
+                <div class="p-3 bg-light rounded-3 border">
+                  <div class="fs-3 fw-bold text-primary" id="result-score-text">0/10</div>
+                  <div class="small text-muted">Final Score</div>
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <div class="p-3 bg-light rounded-3 border">
+                  <div class="fs-3 fw-bold text-success" id="result-accuracy-text">0%</div>
+                  <div class="small text-muted">Accuracy Rate</div>
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <div class="p-3 bg-light rounded-3 border">
+                  <div class="fs-3 fw-bold text-info" id="result-time-text">0m 0s</div>
+                  <div class="small text-muted">Time Taken</div>
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <div class="p-3 bg-light rounded-3 border">
+                  <div class="fs-3 fw-bold text-warning" id="result-percentile-text">Top 15%</div>
+                  <div class="small text-muted">Benchmark Ranking</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-center gap-3">
+              <button class="btn btn-primary rounded-pill px-4 fw-semibold" onclick="retakeTest()">
+                <i class="fas fa-redo me-1"></i> Retake Assessment
+              </button>
+              <button class="btn btn-outline-secondary rounded-pill px-4" onclick="exitTestToCatalog()">
+                <i class="fas fa-list me-1"></i> Other Test Categories
+              </button>
+            </div>
+          </div>
+
+          <!-- Detailed Question Review -->
+          <div class="card custom-card p-4 border-0 shadow-sm">
+            <h5 class="fw-bold mb-4"><i class="fas fa-microscope text-primary me-2"></i>Detailed Question-by-Question Analysis</h5>
+            <div id="result-breakdown-list" class="d-flex flex-column gap-3"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ========================================== -->
+      <!-- TAB 2: AI VIRTUAL MOCK INTERVIEW SIMULATOR -->
+      <!-- ========================================== -->
+      <div class="tab-pane fade" id="panel-ai">
+        <div class="row g-4">
+          <div class="col-lg-4">
+            <div class="card custom-card p-4 border-0 shadow-sm">
+              <h5 class="fw-bold mb-3"><i class="fas fa-sliders-h text-primary me-2"></i>Interview Config</h5>
+              
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-muted text-uppercase">Target Role</label>
+                <select class="form-select form-select-sm" id="ai-role-select" onchange="loadAiQuestion()">
+                  <option value="java">Java Full Stack Developer</option>
+                  <option value="react">Frontend React Specialist</option>
+                  <option value="cloud">Cloud & DevOps Engineer</option>
+                  <option value="hr">HR & Behavioral (STAR)</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-muted text-uppercase">Difficulty Level</label>
+                <select class="form-select form-select-sm" id="ai-difficulty-select">
+                  <option value="fresher">Entry Level / Fresher (0-1 Yrs)</option>
+                  <option value="mid" selected>Mid Level Engineer (1-3 Yrs)</option>
+                  <option value="senior">Senior / Lead (3+ Yrs)</option>
+                </select>
+              </div>
+
+              <div class="alert alert-info py-2 px-3 small border-0 bg-info-subtle text-info mb-0">
+                <i class="fas fa-lightbulb me-1"></i> AI simulates live technical panel evaluation with keyword mapping and STAR scoring.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-8">
+            <div class="card custom-card p-4 border-0 shadow-sm">
+              <!-- Interviewer Question Header -->
+              <div class="d-flex align-items-start gap-3 mb-4 p-3 bg-primary bg-opacity-10 rounded-3 border border-primary border-opacity-25">
+                <div class="bg-primary text-white p-3 rounded-circle fs-4">
+                  <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                  <span class="badge bg-primary text-white px-2 py-1 rounded-pill small mb-1">AI Technical Lead</span>
+                  <h5 class="fw-bold text-dark mb-1" id="ai-current-question">
+                    "Explain the internal working of HashMap in Java and how hash collisions are resolved in Java 8+?"
+                  </h5>
+                  <p class="text-muted small mb-0">Take your time to structure a clear technical response with examples.</p>
+                </div>
+              </div>
+
+              <!-- Answer Input -->
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-muted">Your Spoken / Typed Response:</label>
+                <textarea class="form-control" id="ai-user-answer" rows="5" placeholder="Type your detailed interview answer here... (Include technical concepts, trade-offs, and STAR structure if applicable)"></textarea>
+              </div>
+
+              <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+                <button class="btn btn-outline-secondary btn-sm rounded-pill" onclick="loadNextAiQuestion()">
+                  <i class="fas fa-random me-1"></i> Next Random Question
+                </button>
+                <button class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm" id="btn-evaluate-ai" onclick="evaluateAiAnswer()">
+                  <i class="fas fa-magic me-2"></i> Evaluate My Answer with AI
+                </button>
+              </div>
+
+              <!-- AI Real-Time Feedback Panel (Hidden initially) -->
+              <div id="ai-feedback-container" class="d-none">
+                <div class="card border border-2 border-primary rounded-3 p-4 bg-light">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold text-primary mb-0"><i class="fas fa-check-double me-2"></i>AI Assessment Feedback</h6>
+                    <span class="badge bg-success fs-6 px-3 py-1 rounded-pill" id="ai-score-badge">Strong Match (92/100)</span>
+                  </div>
+
+                  <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                      <div class="small fw-bold text-success mb-1"><i class="fas fa-check-circle me-1"></i> Key Technical Concepts Covered:</div>
+                      <ul class="small text-muted ps-3 mb-0" id="ai-keywords-matched">
+                        <li>Bucket array indexing using (n - 1) & hash</li>
+                        <li>Equals() and hashCode() contract explained</li>
+                        <li>Treeify threshold transition from LinkedList to Red-Black Tree</li>
+                      </ul>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="small fw-bold text-warning mb-1"><i class="fas fa-exclamation-triangle me-1"></i> Missing / Enhancement Points:</div>
+                      <ul class="small text-muted ps-3 mb-0" id="ai-keywords-missed">
+                        <li>Mention time complexity difference: O(1) vs O(log n)</li>
+                        <li>Discuss thread safety / ConcurrentHashMap alternative</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="p-3 bg-white rounded border mb-3">
+                    <div class="small fw-bold text-dark mb-1"><i class="fas fa-chalkboard-teacher text-info me-1"></i> Pro Interview Tip:</div>
+                    <p class="small text-muted mb-0" id="ai-pro-tip">
+                      Always conclude your answer by relating it to production scalability (e.g. why Red-Black tree prevents Worst Case DOS latency spikes).
+                    </p>
+                  </div>
+
+                  <!-- Model Answer Accordion -->
+                  <div class="accordion" id="modelAnswerAcc">
+                    <div class="accordion-item border rounded">
+                      <h2 class="accordion-header">
+                        <button class="accordion-button collapsed py-2 small fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#modelAnsBody">
+                          <i class="fas fa-star text-warning me-2"></i> View Expert Benchmark Answer
+                        </button>
+                      </h2>
+                      <div id="modelAnsBody" class="accordion-collapse collapse" data-bs-parent="#modelAnswerAcc">
+                        <div class="accordion-body small text-dark" id="ai-model-answer-text">
+                          HashMap uses an array of Node objects. When put(K, V) is called, it computes hash(key) and finds bucket index. In Java 8+, when collisions in a single bucket exceed TREEIFY_THRESHOLD (8), the linked list converts to a balanced Red-Black Tree, reducing lookup time from O(n) to O(log n).
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- TAB 3: TECHNICAL & BEHAVIORAL FLASHCARDS -->
+      <!-- ========================================== -->
+      <div class="tab-pane fade" id="panel-qna">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+          <div class="input-group" style="max-width: 400px;">
+            <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
+            <input type="text" class="form-control" id="flashcard-search" placeholder="Search questions by keyword..." oninput="filterFlashcards()">
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary btn-sm rounded-pill active" onclick="filterCategory('ALL', this)">All</button>
+            <button class="btn btn-outline-primary btn-sm rounded-pill" onclick="filterCategory('JAVA', this)">Java & Spring</button>
+            <button class="btn btn-outline-info btn-sm rounded-pill" onclick="filterCategory('REACT', this)">React / Web</button>
+            <button class="btn btn-outline-success btn-sm rounded-pill" onclick="filterCategory('SQL', this)">SQL & DB</button>
+            <button class="btn btn-outline-warning btn-sm rounded-pill" onclick="filterCategory('STAR', this)">STAR Behavioral</button>
+          </div>
+        </div>
+
+        <div id="flashcards-container" class="row g-3">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // ==========================================
+    // 1. MCQ ASSESSMENT REPOSITORY & ENGINE
+    // ==========================================
+    const MCQ_DATABASE = {
+      java: {
+        title: 'Java & Spring Boot Core Assessment',
+        timeSeconds: 600, // 10 mins
+        questions: [
+          {
+            id: 1,
+            question: 'What happens when two distinct keys produce the same hashCode() in a Java 8 HashMap?',
+            options: [
+              'The second key overwrites the first key immediately',
+              'They are stored in the same bucket via LinkedList or Red-Black Tree',
+              'A RuntimeException is thrown immediately',
+              'The HashMap automatically doubles its capacity without inserting'
+            ],
+            answer: 1,
+            explanation: 'Java 8 handles hash collisions by chaining entries in the same bucket. When bucket size exceeds 8, the LinkedList transforms into a Red-Black Tree.'
+          },
+          {
+            id: 2,
+            question: 'Which annotation in Spring Boot combines @Controller and @ResponseBody?',
+            options: ['@Service', '@RestController', '@Component', '@Repository'],
+            answer: 1,
+            explanation: '@RestController is a convenience annotation that is annotated with @Controller and @ResponseBody to automatically serialize return objects into JSON/XML responses.'
+          },
+          {
+            id: 3,
+            question: 'What is the primary difference between Comparable and Comparator in Java?',
+            options: [
+              'Comparable provides a single natural ordering (compareTo), while Comparator allows multiple custom sort orders (compare)',
+              'Comparable is used for Sets, while Comparator is only for Maps',
+              'Comparable is in java.util, while Comparator is in java.lang',
+              'There is no functional difference'
+            ],
+            answer: 0,
+            explanation: 'Comparable is implemented by the class itself via compareTo(T o), while Comparator is passed externally to provide custom sorting rules.'
+          },
+          {
+            id: 4,
+            question: 'In Spring Boot, which scope creates a single bean instance per HTTP request?',
+            options: ['singleton', 'prototype', 'request', 'session'],
+            answer: 2,
+            explanation: 'The request scope creates a single bean definition for the lifecycle of a single HTTP request in web-aware Spring applications.'
+          },
+          {
+            id: 5,
+            question: 'What does the "volatile" keyword guarantee in Java multi-threading?',
+            options: [
+              'Atomicity of compound operations (like count++)',
+              'Visibility of changes across threads and instruction reordering prevention',
+              'Automatic synchronization lock on the entire object',
+              'Faster thread execution by caching values in L1 registers'
+            ],
+            answer: 1,
+            explanation: 'volatile guarantees memory visibility by reading/writing directly from main memory and establishes a happens-before relationship.'
+          },
+          {
+            id: 6,
+            question: 'Which Spring Data JPA method executes a query without loading entire entities into memory?',
+            options: ['findAll()', 'findById()', 'Projections / DTO query methods', 'saveAll()'],
+            answer: 2,
+            explanation: 'JPA Projections allow querying only specific required columns into lightweight interfaces or records, reducing memory overhead.'
+          },
+          {
+            id: 7,
+            question: 'What is the default isolation level in most relational databases used with Spring @Transactional?',
+            options: ['READ_UNCOMMITTED', 'READ_COMMITTED', 'REPEATABLE_READ', 'SERIALIZABLE'],
+            answer: 1,
+            explanation: 'Most production databases like PostgreSQL, Oracle, and SQL Server default to READ_COMMITTED to prevent dirty reads.'
+          },
+          {
+            id: 8,
+            question: 'How do you handle global exceptions gracefully in Spring Boot REST APIs?',
+            options: [
+              'Using @ControllerAdvice with @ExceptionHandler methods',
+              'Wrapping every controller method with try/catch manually',
+              'Setting server.error.include-stacktrace=never in properties only',
+              'Writing custom Servlet Filters for every endpoint'
+            ],
+            answer: 0,
+            explanation: '@ControllerAdvice or @RestControllerAdvice allows centralized exception intercepting and standard ApiResponse formatting.'
+          },
+          {
+            id: 9,
+            question: 'What is the time complexity of searching an element in a balanced Java TreeMap?',
+            options: ['O(1)', 'O(log n)', 'O(n)', 'O(n log n)'],
+            answer: 1,
+            explanation: 'TreeMap is implemented as a Red-Black tree (balanced binary search tree), providing guaranteed O(log n) time for containsKey, get, put, and remove.'
+          },
+          {
+            id: 10,
+            question: 'Which dependency management tool handles the Spring Boot BOM (Bill of Materials)?',
+            options: ['spring-boot-starter-parent', 'spring-boot-maven-plugin', 'lombok', 'hibernate-core'],
+            answer: 0,
+            explanation: 'spring-boot-starter-parent configures dependency management and compatible library versions without explicit version tags.'
+          }
+        ]
+      },
+      react: {
+        title: 'React & Frontend Engineering Assessment',
+        timeSeconds: 600,
+        questions: [
+          {
+            id: 1,
+            question: 'What is the primary purpose of the dependency array in React useEffect?',
+            options: [
+              'To specify which props or state changes trigger the effect',
+              'To list all CSS modules used inside the component',
+              'To define Redux action types',
+              'To cache the DOM subtree across re-renders'
+            ],
+            answer: 0,
+            explanation: 'React compares the values in the dependency array across renders. If any dependency changed, the effect callback executes.'
+          },
+          {
+            id: 2,
+            question: 'What happens when state is updated asynchronously multiple times in a React 18 event handler?',
+            options: [
+              'Each state update triggers an immediate separate re-render',
+              'React automatically batches the updates into a single render pass',
+              'An infinite loop is triggered',
+              'State updates are dropped silently'
+            ],
+            answer: 1,
+            explanation: 'React 18 introduced Automatic Batching for all state updates (including promises, setTimeout, and native event handlers).'
+          },
+          {
+            id: 3,
+            question: 'Why should you avoid using array index as a "key" prop in dynamic React lists?',
+            options: [
+              'React will throw a compile error',
+              'Reordering or deleting items can cause incorrect component state and render bugs',
+              'Array index keys make network requests slower',
+              'Keys are only allowed on HTML <div> elements'
+            ],
+            answer: 1,
+            explanation: 'Index keys do not uniquely identify data items. If items are sorted, added, or deleted, React cannot preserve component instance state properly.'
+          },
+          {
+            id: 4,
+            question: 'Which hook should be used to cache expensive calculation results between renders?',
+            options: ['useCallback', 'useMemo', 'useRef', 'useReducer'],
+            answer: 1,
+            explanation: 'useMemo caches the result of a calculation, recomputing it only when designated dependencies change.'
+          },
+          {
+            id: 5,
+            question: 'What is the main difference between JavaScript Promise.all() and Promise.allSettled()?',
+            options: [
+              'Promise.all rejects immediately if any promise fails; Promise.allSettled waits for all to complete regardless',
+              'Promise.all is synchronous while allSettled is asynchronous',
+              'Promise.allSettled only works in Node.js',
+              'There is no difference'
+            ],
+            answer: 0,
+            explanation: 'Promise.all short-circuits on first rejection. Promise.allSettled returns status and values/errors for every promise.'
+          }
+        ]
+      },
+      sql: {
+        title: 'SQL & Database Optimization Assessment',
+        timeSeconds: 600,
+        questions: [
+          {
+            id: 1,
+            question: 'Which SQL index type is optimal for range queries (e.g. BETWEEN, >, <)?',
+            options: ['Hash Index', 'B-Tree Index', 'Bitmap Index', 'Spatial Index'],
+            answer: 1,
+            explanation: 'B-Tree indexes keep data sorted in tree pages, enabling efficient binary search for both exact matches and ordered range scans.'
+          },
+          {
+            id: 2,
+            question: 'What does the "A" in ACID database properties stand for?',
+            options: ['Availability', 'Atomicity', 'Aggregation', 'Authentication'],
+            answer: 1,
+            explanation: 'Atomicity ensures that all statements within a transaction succeed completely or are rolled back with all changes discarded.'
+          },
+          {
+            id: 3,
+            question: 'What is the main difference between WHERE and HAVING clauses in SQL?',
+            options: [
+              'WHERE filters rows before aggregation; HAVING filters aggregate groups after GROUP BY',
+              'WHERE is only for numeric columns, HAVING is for text',
+              'HAVING runs before table joins',
+              'WHERE cannot be used with SELECT'
+            ],
+            answer: 0,
+            explanation: 'WHERE filters individual row records prior to grouping. HAVING filters summary rows after GROUP BY calculations.'
+          }
+        ]
+      },
+      cloud: {
+        title: 'Cloud, AWS & Microservices Assessment',
+        timeSeconds: 600,
+        questions: [
+          {
+            id: 1,
+            question: 'Which AWS service provides managed container orchestration equivalent to Kubernetes?',
+            options: ['AWS S3', 'Amazon EKS', 'Amazon RDS', 'Amazon Route 53'],
+            answer: 1,
+            explanation: 'Amazon Elastic Kubernetes Service (Amazon EKS) provides managed Kubernetes control plane on AWS.'
+          },
+          {
+            id: 2,
+            question: 'What is the purpose of the Circuit Breaker pattern in microservices?',
+            options: [
+              'To encrypt all database traffic at rest',
+              'To prevent cascading system failures when a downstream microservice is failing or slow',
+              'To generate API documentation automatically',
+              'To balance round-robin DNS records'
+            ],
+            answer: 1,
+            explanation: 'Circuit Breakers (e.g. Resilience4j) trip open when failure thresholds are reached, failing fast and protecting system resources.'
+          }
+        ]
+      }
+    };
+
+    // Assessment State
+    let currentTestKey = 'java';
+    let currentTest = null;
+    let currentQIndex = 0;
+    let userAnswers = {}; // qIndex -> optionIndex
+    let flaggedQuestions = new Set();
+    let timerInterval = null;
+    let secondsRemaining = 600;
+
+    function startMcqTest(key) {
+      currentTestKey = key;
+      currentTest = MCQ_DATABASE[key] || MCQ_DATABASE['java'];
+      currentQIndex = 0;
+      userAnswers = {};
+      flaggedQuestions.clear();
+      secondsRemaining = currentTest.timeSeconds || 600;
+
+      document.getElementById('mcq-select-view').classList.add('d-none');
+      document.getElementById('mcq-result-view').classList.add('d-none');
+      document.getElementById('mcq-active-view').classList.remove('d-none');
+      document.getElementById('test-title-text').textContent = currentTest.title;
+
+      renderPalette();
+      renderActiveQuestion();
+      startTimer();
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      updateTimerDisplay();
+
+      timerInterval = setInterval(() => {
+        secondsRemaining--;
+        updateTimerDisplay();
+
+        if (secondsRemaining <= 0) {
+          clearInterval(timerInterval);
+          alert('Time has expired! Submitting your assessment automatically.');
+          submitTest();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const mins = Math.floor(secondsRemaining / 60);
+      const secs = secondsRemaining % 60;
+      const el = document.getElementById('test-countdown');
+      el.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      if (secondsRemaining <= 120) {
+        el.parentElement.classList.add('animate-pulse', 'border', 'border-danger');
+      }
+    }
+
+    function renderPalette() {
+      const palette = document.getElementById('question-palette');
+      const questions = currentTest.questions;
+
+      palette.innerHTML = questions.map((q, idx) => {
+        let stateClass = 'btn-outline-secondary';
+        if (userAnswers[idx] !== undefined) stateClass = 'answered';
+        else if (flaggedQuestions.has(idx)) stateClass = 'flagged';
+
+        const activeClass = idx === currentQIndex ? 'active-q' : '';
+
+        return `
+          <button class="btn question-btn ${stateClass} ${activeClass}" onclick="goToQuestion(${idx})">
+            ${idx + 1}
+          </button>
+        `;
+      }).join('');
+
+      let ansCount = Object.keys(userAnswers).length;
+      let flagCount = flaggedQuestions.size;
+      document.getElementById('count-answered').textContent = ansCount;
+      document.getElementById('count-flagged').textContent = flagCount;
+      document.getElementById('count-unanswered').textContent = questions.length - ansCount;
+    }
+
+    function renderActiveQuestion() {
+      const q = currentTest.questions[currentQIndex];
+      document.getElementById('question-index-badge').textContent = `Question ${currentQIndex + 1} of ${currentTest.questions.length}`;
+      document.getElementById('active-question-text').textContent = q.question;
+
+      const container = document.getElementById('active-options-container');
+      const selected = userAnswers[currentQIndex];
+
+      container.innerHTML = q.options.map((opt, optIdx) => {
+        const isSelected = selected === optIdx ? 'selected' : '';
+        const letter = String.fromCharCode(65 + optIdx);
+        return `
+          <div class="mcq-option ${isSelected}" onclick="selectOption(${optIdx})">
+            <div class="d-flex align-items-center">
+              <span class="badge bg-light text-dark border me-3 fs-6" style="width: 28px;">${letter}</span>
+              <span>${opt}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('btn-prev-q').disabled = currentQIndex === 0;
+      document.getElementById('btn-next-q').disabled = currentQIndex === currentTest.questions.length - 1;
+
+      renderPalette();
+    }
+
+    function selectOption(optIdx) {
+      userAnswers[currentQIndex] = optIdx;
+      flaggedQuestions.delete(currentQIndex);
+      renderActiveQuestion();
+    }
+
+    function clearCurrentAnswer() {
+      delete userAnswers[currentQIndex];
+      renderActiveQuestion();
+    }
+
+    function toggleFlagCurrentQuestion() {
+      if (flaggedQuestions.has(currentQIndex)) {
+        flaggedQuestions.delete(currentQIndex);
+      } else {
+        flaggedQuestions.add(currentQIndex);
+      }
+      renderPalette();
+    }
+
+    function nextQuestion() {
+      if (currentQIndex < currentTest.questions.length - 1) {
+        currentQIndex++;
+        renderActiveQuestion();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQIndex > 0) {
+        currentQIndex--;
+        renderActiveQuestion();
+      }
+    }
+
+    function goToQuestion(idx) {
+      currentQIndex = idx;
+      renderActiveQuestion();
+    }
+
+    function submitTest() {
+      clearInterval(timerInterval);
+
+      let correctCount = 0;
+      const questions = currentTest.questions;
+
+      questions.forEach((q, idx) => {
+        if (userAnswers[idx] === q.answer) {
+          correctCount++;
+        }
+      });
+
+      const total = questions.length;
+      const accuracy = Math.round((correctCount / total) * 100);
+      const timeSpent = (currentTest.timeSeconds || 600) - secondsRemaining;
+      const timeStr = `${Math.floor(timeSpent / 60)}m ${timeSpent % 60}s`;
+
+      document.getElementById('mcq-active-view').classList.add('d-none');
+      document.getElementById('mcq-result-view').classList.remove('d-none');
+
+      document.getElementById('result-score-text').textContent = `${correctCount} / ${total}`;
+      document.getElementById('result-accuracy-text').textContent = `${accuracy}%`;
+      document.getElementById('result-time-text').textContent = timeStr;
+
+      const iconBox = document.getElementById('result-icon-box');
+      if (accuracy >= 80) {
+        document.getElementById('result-status-title').textContent = '🎉 Assessment Passed with Distinction!';
+        document.getElementById('result-status-subtitle').textContent = 'Your technical proficiency matches senior screening standards.';
+        document.getElementById('result-percentile-text').textContent = 'Top 5%';
+        iconBox.className = 'd-inline-flex align-items-center justify-content-center p-3 rounded-circle mx-auto mb-3 bg-success-subtle text-success';
+      } else if (accuracy >= 50) {
+        document.getElementById('result-status-title').textContent = '👍 Good Effort - Passed';
+        document.getElementById('result-status-subtitle').textContent = 'Review the breakdown below to polish missing edge-case topics.';
+        document.getElementById('result-percentile-text').textContent = 'Top 25%';
+        iconBox.className = 'd-inline-flex align-items-center justify-content-center p-3 rounded-circle mx-auto mb-3 bg-info-subtle text-info';
+      } else {
+        document.getElementById('result-status-title').textContent = '📚 Needs Improvement';
+        document.getElementById('result-status-subtitle').textContent = 'Review detailed explanations below and re-attempt to solidify core concepts.';
+        document.getElementById('result-percentile-text').textContent = 'Top 50%';
+        iconBox.className = 'd-inline-flex align-items-center justify-content-center p-3 rounded-circle mx-auto mb-3 bg-warning-subtle text-warning';
+      }
+
+      // Render Detailed Breakdown
+      const breakdown = document.getElementById('result-breakdown-list');
+      breakdown.innerHTML = questions.map((q, idx) => {
+        const userChoice = userAnswers[idx];
+        const isCorrect = userChoice === q.answer;
+        const statusBadge = isCorrect ? '<span class="badge bg-success">✓ Correct</span>' : (userChoice !== undefined ? '<span class="badge bg-danger">✗ Incorrect</span>' : '<span class="badge bg-secondary">Unanswered</span>');
+
+        return `
+          <div class="p-3 rounded-3 border ${isCorrect ? 'bg-success-subtle bg-opacity-25' : 'bg-light'}">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-bold text-dark">Q${idx + 1}: ${q.question}</span>
+              ${statusBadge}
+            </div>
+            <div class="small mb-2">
+              <div><strong>Your Choice:</strong> ${userChoice !== undefined ? q.options[userChoice] : '<span class="text-muted">None</span>'}</div>
+              <div class="text-success"><strong>Correct Answer:</strong> ${q.options[q.answer]}</div>
+            </div>
+            <div class="p-2 bg-white rounded border small text-muted">
+              <i class="fas fa-info-circle text-primary me-1"></i> <strong>Concept:</strong> ${q.explanation}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function retakeTest() {
+      startMcqTest(currentTestKey);
+    }
+
+    function exitTestToCatalog() {
+      document.getElementById('mcq-result-view').classList.add('d-none');
+      document.getElementById('mcq-active-view').classList.add('d-none');
+      document.getElementById('mcq-select-view').classList.remove('d-none');
+    }
+
+    // ==========================================
+    // 2. AI VIRTUAL MOCK INTERVIEW SIMULATOR
+    // ==========================================
+    const AI_QUESTIONS = {
+      java: [
+        {
+          q: "Explain the internal working of HashMap in Java and how hash collisions are resolved in Java 8+?",
+          matchedKeywords: ["Bucket array indexing", "Equals and hashCode contract", "Red-Black Tree conversion at threshold 8"],
+          missedKeywords: ["O(log n) worst case lookup", "ConcurrentHashMap memory segmenting"],
+          proTip: "Highlight why converting to Red-Black tree protects enterprise microservices against hash collision denial-of-service attacks.",
+          modelAnswer: "HashMap uses an array of Node objects. When put() is invoked, it hashes the key to find the index. If collisions occur, entries are chained. Since Java 8, when a bucket reaches 8 elements and array capacity is >=64, it transforms from LinkedList to Red-Black Tree, improving lookup from O(n) to O(log n)."
+        },
+        {
+          q: "How does Spring Boot handle Database Transactions with @Transactional and what causes transaction rollback failures?",
+          matchedKeywords: ["AOP Proxy interception", "Rollback on RuntimeException", "Propagation settings (REQUIRED)"],
+          missedKeywords: ["Self-invocation bypassing AOP proxy", "Checked exceptions requiring rollbackFor attribute"],
+          proTip: "Always mention that calling a @Transactional method from inside the same class bypasses Spring proxy interceptor.",
+          modelAnswer: "@Transactional works via Spring AOP proxies. By default, Spring rolls back only on unchecked exceptions (RuntimeException / Error). If a checked exception is thrown, it won't rollback unless rollbackFor=Exception.class is explicitly configured. Also, private methods or internal self-invocations bypass the proxy."
+        }
+      ],
+      react: [
+        {
+          q: "How does React Fiber Architecture and the Virtual DOM reconciliation algorithm work under the hood?",
+          matchedKeywords: ["Diffing algorithm heuristic", "Fiber tree unit of work", "Concurrent re-rendering"],
+          missedKeywords: ["requestIdleCallback scheduling", "State batching in React 18"],
+          proTip: "Differentiate between the Render phase (interruptible work) and the Commit phase (synchronous DOM mutation).",
+          modelAnswer: "React Fiber breaks reconciliation into incremental units of work called fibers. It enables prioritizing high-priority UI updates (user typing) over background renders. The diffing algorithm operates in O(n) by comparing element types and key attributes."
+        }
+      ],
+      cloud: [
+        {
+          q: "How do you architect a zero-downtime Blue-Green Deployment strategy using Docker, Kubernetes, and Load Balancers?",
+          matchedKeywords: ["Two identical production environments (Blue/Green)", "Traffic switching via Load Balancer / Ingress", "Instant rollback capabilities"],
+          missedKeywords: ["Database schema forward compatibility", "Canary testing validation"],
+          proTip: "Explain how backward-compatible database migrations (Expand/Contract pattern) are essential for smooth traffic cutovers.",
+          modelAnswer: "In Blue-Green deployment, the active version (Blue) runs live while the new version (Green) is deployed and smoke-tested in isolation. The load balancer / ingress router switches 100% of traffic to Green instantly. If any regression occurs, traffic flips back to Blue with zero downtime."
+        }
+      ],
+      hr: [
+        {
+          q: "Tell me about a challenging technical bug or outage you resolved under pressure using the STAR framework.",
+          matchedKeywords: ["Situation context established", "Task ownership defined", "Action steps detailed", "Quantified Result delivered"],
+          missedKeywords: ["Post-mortem documentation", "Automated regression tests added"],
+          proTip: "Always quantify the result (e.g. 'reduced latency by 45% and restored uptime in under 15 minutes').",
+          modelAnswer: "Situation: Our payment gateway service began timing out during high-traffic sales. Task: As the backend engineer on-call, I needed to identify root cause and restore checkout. Action: Analyzed connection pool metrics, found unclosed JDBC sessions, added hikariCP leak detection, and deployed connection timeout limits. Result: Checkout success rate recovered to 99.8% with zero dropped orders."
+        }
+      ]
+    };
+
+    let currentAiIndex = 0;
+
+    function loadAiQuestion() {
+      const role = document.getElementById('ai-role-select').value;
+      const list = AI_QUESTIONS[role] || AI_QUESTIONS['java'];
+      currentAiIndex = 0;
+      document.getElementById('ai-current-question').textContent = `"${list[currentAiIndex].q}"`;
+      document.getElementById('ai-user-answer').value = '';
+      document.getElementById('ai-feedback-container').classList.add('d-none');
+    }
+
+    function loadNextAiQuestion() {
+      const role = document.getElementById('ai-role-select').value;
+      const list = AI_QUESTIONS[role] || AI_QUESTIONS['java'];
+      currentAiIndex = (currentAiIndex + 1) % list.length;
+      document.getElementById('ai-current-question').textContent = `"${list[currentAiIndex].q}"`;
+      document.getElementById('ai-user-answer').value = '';
+      document.getElementById('ai-feedback-container').classList.add('d-none');
+    }
+
+    function evaluateAiAnswer() {
+      const answer = document.getElementById('ai-user-answer').value.trim();
+      if (!answer || answer.length < 15) {
+        alert('Please write a more detailed response (at least 2-3 sentences) so the AI evaluator can analyze your technical explanation.');
+        return;
+      }
+
+      const role = document.getElementById('ai-role-select').value;
+      const item = (AI_QUESTIONS[role] || AI_QUESTIONS['java'])[currentAiIndex];
+      const btn = document.getElementById('btn-evaluate-ai');
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Analyzing with AI...';
+
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-magic me-2"></i> Evaluate My Answer with AI';
+
+        document.getElementById('ai-feedback-container').classList.remove('d-none');
+        document.getElementById('ai-keywords-matched').innerHTML = item.matchedKeywords.map(k => `<li>${k}</li>`).join('');
+        document.getElementById('ai-keywords-missed').innerHTML = item.missedKeywords.map(k => `<li>${k}</li>`).join('');
+        document.getElementById('ai-pro-tip').textContent = item.proTip;
+        document.getElementById('ai-model-answer-text').textContent = item.modelAnswer;
+
+        UI.showToast('AI analysis completed successfully!', 'success');
+      }, 700);
+    }
+
+    // ==========================================
+    // 3. FLASHCARD QUESTION BANK
+    // ==========================================
+    const FLASHCARDS = [
+      {
+        id: 1,
+        cat: 'JAVA',
+        catLabel: 'Java & Spring',
+        title: 'Difference between @RequestParam vs @PathVariable',
+        desc: '@PathVariable extracts URI values (e.g. /api/jobs/{id} -> id=10). @RequestParam extracts query parameters from the URL query string (e.g. /api/jobs?location=Hyderabad).',
+        keywords: 'REST API, URI template, Query Parameters'
+      },
+      {
+        id: 2,
+        cat: 'JAVA',
+        catLabel: 'Java & Spring',
+        title: 'Explain Inversion of Control (IoC) and Dependency Injection',
+        desc: 'IoC transfers the control of object creation and lifecycle from the developer to the Spring IoC Container. Dependency Injection (DI) is the pattern where dependencies are injected via constructor, setter, or field annotations.',
+        keywords: 'IoC Container, @Autowired, Loose Coupling'
+      },
+      {
+        id: 3,
+        cat: 'REACT',
+        catLabel: 'React / Web',
+        title: 'How does the React Virtual DOM optimize web performance?',
+        desc: 'Instead of mutating the real browser DOM directly on every state change, React creates an in-memory Virtual DOM tree, diffs it against previous snapshot, and batches only the minimum required DOM mutations.',
+        keywords: 'Reconciliation, Diffing Algorithm, Batching'
+      },
+      {
+        id: 4,
+        cat: 'SQL',
+        catLabel: 'SQL & DB',
+        title: 'Difference between Clustered and Non-Clustered Indexes',
+        desc: 'A Clustered Index alters the physical order of data rows on disk (only 1 per table, typically Primary Key). Non-Clustered Indexes create separate pointer structures pointing to real data blocks.',
+        keywords: 'Primary Key, B-Tree, Table Scan Reduction'
+      },
+      {
+        id: 5,
+        cat: 'STAR',
+        catLabel: 'STAR Behavioral',
+        title: 'Tell me about a time you handled a difficult project deadline.',
+        desc: 'Structure your answer with STAR: Situation (tight sprint delivery), Task (deliver critical authentication feature), Action (prioritized core MVP, negotiated secondary tasks, pair programmed), Result (delivered 1 day early with 100% test coverage).',
+        keywords: 'STAR Framework, Prioritization, Team Communication'
+      },
+      {
+        id: 6,
+        cat: 'JAVA',
+        catLabel: 'Java & Spring',
+        title: 'What is the purpose of Spring Security Filter Chain and JWT?',
+        desc: 'Spring Security processes incoming requests through a chain of filters (e.g. UsernamePasswordAuthenticationFilter, JwtAuthenticationFilter). JWT validates signed stateless claims in Authorization: Bearer headers without database lookups on every request.',
+        keywords: 'SecurityFilterChain, Stateless Auth, Bearer Token'
+      }
+    ];
+
+    let currentCatFilter = 'ALL';
+
+    function renderFlashcards() {
+      const container = document.getElementById('flashcards-container');
+      const search = (document.getElementById('flashcard-search').value || '').toLowerCase();
+
+      let list = FLASHCARDS.filter(f => {
+        const matchesCat = currentCatFilter === 'ALL' || f.cat === currentCatFilter;
+        const matchesSearch = f.title.toLowerCase().includes(search) || f.desc.toLowerCase().includes(search) || f.keywords.toLowerCase().includes(search);
+        return matchesCat && matchesSearch;
+      });
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="col-12 text-center text-muted py-5"><h5>No flashcards match your filter</h5></div>`;
+        return;
+      }
+
+      container.innerHTML = list.map(f => `
+        <div class="col-md-6 col-lg-4">
+          <div class="card custom-card flashcard p-4 h-100 border-0 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="badge bg-primary-subtle text-primary fw-bold">${f.catLabel}</span>
+              <span class="small text-muted"><i class="fas fa-lightbulb text-warning"></i> Concept</span>
+            </div>
+            <h6 class="fw-bold text-dark mb-2">${f.title}</h6>
+            <p class="small text-muted mb-3" style="line-height: 1.6;">${f.desc}</p>
+            <div class="mt-auto pt-2 border-top">
+              <span class="small text-muted"><strong>Keywords:</strong> ${f.keywords}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterCategory(cat, btn) {
+      currentCatFilter = cat;
+      document.querySelectorAll('#panel-qna .btn-sm').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderFlashcards();
+    }
+
+    function filterFlashcards() {
+      renderFlashcards();
+    }
+
+    // Initialize Page
+    renderFlashcards();
+    loadAiQuestion();
+  </script>
+</body>
+</html>

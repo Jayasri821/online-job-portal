@@ -1,12 +1,259 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HireHub | Online Job Portal</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareerMatch AI – Smart Job Seeking and Career Guidance Platform</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navbar Placeholder -->
+  <div id="navbar-container"></div>
+
+  <!-- Hero Section -->
+  <header class="hero-gradient text-white">
+    <div class="container py-4">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-7">
+          <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-white bg-opacity-10 border border-white border-opacity-20 mb-3">
+            <i class="fas fa-sparkles text-warning"></i>
+            <span class="small fw-semibold">Next-Gen Intelligent Career Matching Platform</span>
+          </div>
+          <h1 class="display-4 fw-extrabold mb-3 lh-tight">
+            Stop Guessing. <br>
+            <span class="text-info">Match Intelligently</span> With Your Dream Tech Job.
+          </h1>
+          <p class="lead text-light text-opacity-90 mb-4 fs-6">
+            CareerMatch AI analyzes your skills, experience, education, and career preferences against live job requirements. Get dynamic match scores, personalized "Why This Job?" explanations, skill gap roadmaps, and tailored interview kits.
+          </p>
+          <div class="d-flex flex-wrap gap-3">
+            <a href="register.html" class="btn btn-light btn-lg px-4 py-2 text-primary fw-bold rounded-pill shadow-sm">
+              <i class="fas fa-rocket me-2"></i> Get Started Free
+            </a>
+            <a href="jobs.html" class="btn btn-outline-light btn-lg px-4 py-2 rounded-pill">
+              <i class="fas fa-search me-2"></i> Browse Jobs
+            </a>
+            <a href="interview.html" class="btn btn-warning btn-lg px-4 py-2 text-dark fw-semibold rounded-pill shadow-sm">
+              <i class="fas fa-graduation-cap me-2"></i> Real-Time MCQ & Interview Kit
+            </a>
+          </div>
+        </div>
+
+        <!-- Interactive AI Match Teaser Card -->
+        <div class="col-lg-5">
+          <div class="card custom-card p-4 text-dark border-0 shadow-lg" style="background: rgba(255,255,255,0.95);">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <span class="badge bg-primary-subtle text-primary border border-primary px-3 py-1 rounded-pill fw-bold">
+                <i class="fas fa-brain me-1"></i> Live Match Engine Demo
+              </span>
+              <span class="badge bg-success-subtle text-success border border-success fw-bold px-2 py-1">
+                91% Match
+              </span>
+            </div>
+            <h5 class="fw-bold mb-1">Java Full Stack Developer</h5>
+            <p class="text-muted small mb-3"><i class="fas fa-building me-1"></i> ABC Technologies • Hyderabad • ₹6–9 LPA</p>
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-muted text-uppercase mb-1">Dynamic Match Breakdown</label>
+              <div class="progress mb-2" style="height: 10px;">
+                <div class="progress-bar bg-primary" role="progressbar" style="width: 50%" title="Skills (50%)"></div>
+                <div class="progress-bar bg-info" role="progressbar" style="width: 15%" title="Experience (15%)"></div>
+                <div class="progress-bar bg-success" role="progressbar" style="width: 10%" title="Education (10%)"></div>
+                <div class="progress-bar bg-warning" role="progressbar" style="width: 10%" title="Location (10%)"></div>
+                <div class="progress-bar bg-purple" role="progressbar" style="width: 6%" title="Salary (10%)"></div>
+              </div>
+              <div class="d-flex justify-content-between small text-muted" style="font-size: 0.75rem;">
+                <span>Skills (50%)</span>
+                <span>Exp (15%)</span>
+                <span>Edu (10%)</span>
+                <span>Loc (10%)</span>
+              </div>
+            </div>
+
+            <div class="bg-light p-3 rounded-3 mb-3 border">
+              <div class="small fw-bold text-success mb-1"><i class="fas fa-check-circle me-1"></i> Matched Skills:</div>
+              <div class="mb-2">
+                <span class="skill-pill skill-matched">Java</span>
+                <span class="skill-pill skill-matched">SQL</span>
+                <span class="skill-pill skill-matched">REST API</span>
+                <span class="skill-pill skill-matched">HTML</span>
+              </div>
+              <div class="small fw-bold text-danger mb-1"><i class="fas fa-times-circle me-1"></i> Missing Skills:</div>
+              <div>
+                <span class="skill-pill skill-missing">React</span>
+                <span class="skill-pill skill-missing">Spring Boot</span>
+              </div>
+            </div>
+
+            <div class="alert alert-primary py-2 px-3 mb-0 small border-0 bg-primary-subtle text-primary">
+              <i class="fas fa-lightbulb me-1"></i> <strong>Why This Job:</strong> 4 of 6 required skills match your candidate profile & location aligns with Hyderabad preference.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Platform Differentiator Banner -->
+  <section class="py-5 bg-white border-bottom">
+    <div class="container text-center">
+      <h2 class="fw-bold mb-2">More Than Just Another Job Portal</h2>
+      <p class="text-muted col-lg-7 mx-auto mb-5">
+        Standard job boards leave candidates in the dark. CareerMatch AI acts as your intelligent pairing co-pilot to guide your career roadmap.
+      </p>
+
+      <div class="row g-4 text-start">
+        <!-- Feature 1 -->
+        <div class="col-md-4">
+          <div class="custom-card p-4 h-100 border-top-primary">
+            <div class="metric-icon bg-primary-subtle text-primary mb-3">
+              <i class="fas fa-percentage fs-4"></i>
+            </div>
+            <h5 class="fw-bold">Dynamic Match Scoring</h5>
+            <p class="text-muted small">
+              Scores are calculated dynamically across 6 weighted dimensions: Skills (50%), Experience (15%), Education (10%), Location (10%), Salary (10%), and Work Mode (5%).
+            </p>
+          </div>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="col-md-4">
+          <div class="custom-card p-4 h-100 border-top-info">
+            <div class="metric-icon bg-info-subtle text-info mb-3">
+              <i class="fas fa-question-circle fs-4"></i>
+            </div>
+            <h5 class="fw-bold">"Why This Job?" Explanations</h5>
+            <p class="text-muted small">
+              Context-aware insights telling you exactly why a role fits your unique background, rather than generic black-box search results.
+            </p>
+          </div>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="col-md-4">
+          <div class="custom-card p-4 h-100 border-top-danger">
+            <div class="metric-icon bg-danger-subtle text-danger mb-3">
+              <i class="fas fa-layer-group fs-4"></i>
+            </div>
+            <h5 class="fw-bold">Skill Gap Analyzer</h5>
+            <p class="text-muted small">
+              Identify missing competencies before applying, prioritized by real market demand with direct learning tutorials and documentation.
+            </p>
+          </div>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="col-md-4">
+          <div class="custom-card p-4 h-100 border-top-success">
+            <div class="metric-icon bg-success-subtle text-success mb-3">
+              <i class="fas fa-tachometer-alt fs-4"></i>
+            </div>
+            <h5 class="fw-bold">Career Readiness Score</h5>
+            <p class="text-muted small">
+              Comprehensive 0–100 score analyzing profile completeness, technical skills, projects, certifications, internships, and interview practice.
+            </p>
+          </div>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="col-md-4">
+          <div class="custom-card p-4 h-100 border-top-warning">
+            <div class="metric-icon bg-warning-subtle text-warning mb-3">
+              <i class="fas fa-clipboard-check fs-4"></i>
+            </div>
+            <h5 class="fw-bold">Interview & MCQ Testing Kit</h5>
+            <p class="text-muted small mb-3">
+              Live timed technical MCQ assessments, virtual AI mock interviews with instant feedback, and tailored STAR question banks.
+            </p>
+            <a href="interview.html" class="btn btn-outline-warning btn-sm rounded-pill text-dark fw-semibold">
+              <i class="fas fa-play me-1"></i> Start Practice Tests
+            </a>
+          </div>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="col-md-4">
+          <div class="custom-card p-4 h-100 border-top-primary">
+            <div class="metric-icon bg-primary-subtle text-primary mb-3">
+              <i class="fas fa-columns fs-4"></i>
+            </div>
+            <h5 class="fw-bold">Job Comparison & Tracker</h5>
+            <p class="text-muted small">
+              Compare multiple job offers side-by-side on match score, salary, and requirements. Track all submissions with a visual Kanban pipeline.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Stats Counter -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <div class="row g-4 text-center">
+        <div class="col-md-3 col-6">
+          <div class="custom-card p-4">
+            <h2 class="fw-extrabold text-primary mb-1">20+</h2>
+            <p class="text-muted small mb-0 fw-semibold">Active Openings</p>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="custom-card p-4">
+            <h2 class="fw-extrabold text-info mb-1">10+</h2>
+            <p class="text-muted small mb-0 fw-semibold">Candidate Profiles</p>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="custom-card p-4">
+            <h2 class="fw-extrabold text-success mb-1">5+</h2>
+            <p class="text-muted small mb-0 fw-semibold">Partner Employers</p>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="custom-card p-4">
+            <h2 class="fw-extrabold text-warning mb-1">94%</h2>
+            <p class="text-muted small mb-0 fw-semibold">Match Accuracy</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-5 bg-dark text-white text-center">
+    <div class="container py-4">
+      <h2 class="fw-bold mb-3">Ready to Elevate Your Career Readiness?</h2>
+      <p class="text-light text-opacity-75 col-lg-6 mx-auto mb-4">
+        Join hundreds of students and developers using intelligent matching algorithms to land high-impact technical roles.
+      </p>
+      <div class="d-flex justify-content-center gap-3">
+        <a href="register.html" class="btn btn-primary btn-lg px-4 rounded-pill">Create Free Account</a>
+        <a href="login.html" class="btn btn-outline-light btn-lg px-4 rounded-pill">Sign In</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container text-center">
+      <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
+        <i class="fas fa-brain text-primary fs-4"></i>
+        <span class="fw-bold text-white fs-5">CareerMatch AI</span>
+      </div>
+      <p class="text-muted small mb-3">Smart Job Seeking & Career Guidance Platform • Built for Students & Engineers</p>
+      <div class="text-muted small">
+        &copy; 2026 CareerMatch AI. All rights reserved. Full-stack major project demonstration.
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+</body>
 </html>

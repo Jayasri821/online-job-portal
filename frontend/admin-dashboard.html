@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Administrator Portal – CareerMatch AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-light">
+
+  <div id="navbar-container"></div>
+
+  <div class="container py-4 pb-5">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+      <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <h2 class="fw-bold mb-0">System Administrator Portal</h2>
+          <span class="badge bg-danger px-3 py-1 rounded-pill"><i class="fas fa-shield-alt me-1"></i> Full Access</span>
+        </div>
+        <p class="text-muted small mb-0">Manage system users, moderate job postings, and monitor platform analytics.</p>
+      </div>
+    </div>
+
+    <!-- Admin Metric Cards -->
+    <div class="row g-3 mb-4">
+      <div class="col-xl-3 col-md-6">
+        <div class="metric-card">
+          <div class="metric-icon bg-primary-subtle text-primary">
+            <i class="fas fa-users"></i>
+          </div>
+          <div>
+            <div class="fs-4 fw-extrabold text-primary" id="adm-users">--</div>
+            <div class="small text-muted fw-semibold">Total Users</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-md-6">
+        <div class="metric-card">
+          <div class="metric-icon bg-info-subtle text-info">
+            <i class="fas fa-user-graduate"></i>
+          </div>
+          <div>
+            <div class="fs-4 fw-extrabold text-info" id="adm-seekers">--</div>
+            <div class="small text-muted fw-semibold">Job Seekers</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-md-6">
+        <div class="metric-card">
+          <div class="metric-icon bg-warning-subtle text-warning">
+            <i class="fas fa-building"></i>
+          </div>
+          <div>
+            <div class="fs-4 fw-extrabold text-warning" id="adm-employers">--</div>
+            <div class="small text-muted fw-semibold">Employers</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-md-6">
+        <div class="metric-card">
+          <div class="metric-icon bg-success-subtle text-success">
+            <i class="fas fa-briefcase"></i>
+          </div>
+          <div>
+            <div class="fs-4 fw-extrabold text-success" id="adm-jobs">--</div>
+            <div class="small text-muted fw-semibold">Total Jobs Posted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs for Management -->
+    <ul class="nav nav-pills mb-4 bg-white p-2 rounded-pill border shadow-sm" id="adminTabs" role="tablist">
+      <li class="nav-item flex-fill text-center" role="presentation">
+        <button class="nav-link active rounded-pill fw-semibold py-2" id="users-tab" data-bs-toggle="pill" data-bs-target="#tab-users" type="button">
+          <i class="fas fa-users-cog me-2"></i> User Management
+        </button>
+      </li>
+      <li class="nav-item flex-fill text-center" role="presentation">
+        <button class="nav-link rounded-pill fw-semibold py-2" id="jobs-tab" data-bs-toggle="pill" data-bs-target="#tab-jobs" type="button">
+          <i class="fas fa-tasks me-2"></i> Job Moderation
+        </button>
+      </li>
+      <li class="nav-item flex-fill text-center" role="presentation">
+        <button class="nav-link rounded-pill fw-semibold py-2" id="apps-tab" data-bs-toggle="pill" data-bs-target="#tab-apps" type="button">
+          <i class="fas fa-file-signature me-2"></i> All Applications Log
+        </button>
+      </li>
+    </ul>
+
+    <!-- Tab Contents -->
+    <div class="tab-content">
+      <!-- 1. Users Tab -->
+      <div class="tab-pane fade show active" id="tab-users">
+        <div class="card custom-card border-0 shadow-sm p-4">
+          <h5 class="fw-bold mb-3">Registered Users</h5>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="bg-light">
+                <tr>
+                  <th>ID</th>
+                  <th>Full Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-users-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Jobs Moderation Tab -->
+      <div class="tab-pane fade" id="tab-jobs">
+        <div class="card custom-card border-0 shadow-sm p-4">
+          <h5 class="fw-bold mb-3">All System Jobs</h5>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="bg-light">
+                <tr>
+                  <th>ID</th>
+                  <th>Job Title</th>
+                  <th>Company</th>
+                  <th>Salary Range</th>
+                  <th>Status</th>
+                  <th class="text-end">Moderate Status</th>
+                </tr>
+              </thead>
+              <tbody id="admin-jobs-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Applications Log Tab -->
+      <div class="tab-pane fade" id="tab-apps">
+        <div class="card custom-card border-0 shadow-sm p-4">
+          <h5 class="fw-bold mb-3">Platform Applications Activity</h5>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="bg-light">
+                <tr>
+                  <th>App ID</th>
+                  <th>Candidate</th>
+                  <th>Job Position</th>
+                  <th>Company</th>
+                  <th>Match %</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="admin-apps-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    if (!Auth.requireAuth(['ADMIN'])) {
+      // redirected
+    }
+
+    async function loadAdminData() {
+      try {
+        // Stats
+        const statsRes = await Api.getAdminStats();
+        if (statsRes.success && statsRes.data) {
+          const s = statsRes.data;
+          document.getElementById('adm-users').textContent = s.totalUsersCount || 0;
+          document.getElementById('adm-seekers').textContent = s.totalJobSeekersCount || 0;
+          document.getElementById('adm-employers').textContent = s.totalEmployersCount || 0;
+          document.getElementById('adm-jobs').textContent = s.totalJobsInSystem || 0;
+        }
+
+        // Users
+        loadAdminUsers();
+        // Jobs
+        loadAdminJobs();
+        // Apps
+        loadAdminApps();
+      } catch (err) {
+        UI.showToast('Failed to load admin data: ' + err.message, 'error');
+      }
+    }
+
+    async function loadAdminUsers() {
+      try {
+        const res = await Api.getAllUsers();
+        const tbody = document.getElementById('admin-users-tbody');
+        if (res.success && res.data) {
+          tbody.innerHTML = res.data.map(u => `
+            <tr>
+              <td>#${u.id}</td>
+              <td class="fw-bold text-dark">${u.fullName}</td>
+              <td>${u.email}</td>
+              <td>${u.phone || 'N/A'}</td>
+              <td><span class="badge ${u.role === 'ADMIN' ? 'bg-danger' : (u.role === 'EMPLOYER' ? 'bg-info text-dark' : 'bg-primary')}">${u.role}</span></td>
+              <td><span class="badge ${u.enabled ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'}">${u.enabled ? 'Active' : 'Disabled'}</span></td>
+              <td class="text-end">
+                <button class="btn btn-outline-warning btn-sm rounded-pill me-1" onclick="toggleUser(${u.id})">
+                  ${u.enabled ? 'Disable' : 'Enable'}
+                </button>
+                ${u.role !== 'ADMIN' ? `
+                  <button class="btn btn-outline-danger btn-sm rounded-pill" onclick="deleteUser(${u.id})">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                ` : ''}
+              </td>
+            </tr>
+          `).join('');
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function loadAdminJobs() {
+      try {
+        const res = await Api.getAllAdminJobs();
+        const tbody = document.getElementById('admin-jobs-tbody');
+        if (res.success && res.data) {
+          tbody.innerHTML = res.data.map(j => `
+            <tr>
+              <td>#${j.id}</td>
+              <td class="fw-bold text-dark">${j.title}</td>
+              <td>${j.employer ? j.employer.companyName : 'Company'}</td>
+              <td class="text-success small fw-semibold">${UI.formatSalaryRange(j.salaryMin, j.salaryMax)}</td>
+              <td><span class="badge ${j.status === 'OPEN' ? 'bg-success' : (j.status === 'PENDING_APPROVAL' ? 'bg-warning text-dark' : 'bg-secondary')}">${j.status}</span></td>
+              <td class="text-end">
+                <button class="btn btn-success btn-sm rounded-pill me-1" onclick="updateJobStatus(${j.id}, 'OPEN')">Approve</button>
+                <button class="btn btn-danger btn-sm rounded-pill me-1" onclick="updateJobStatus(${j.id}, 'REJECTED')">Reject</button>
+                <button class="btn btn-secondary btn-sm rounded-pill" onclick="updateJobStatus(${j.id}, 'CLOSED')">Close</button>
+              </td>
+            </tr>
+          `).join('');
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function loadAdminApps() {
+      try {
+        const res = await Api.getAllAdminApplications();
+        const tbody = document.getElementById('admin-apps-tbody');
+        if (res.success && res.data) {
+          tbody.innerHTML = res.data.map(a => `
+            <tr>
+              <td>#${a.id}</td>
+              <td class="fw-bold text-dark">${a.candidateName}</td>
+              <td>${a.job ? a.job.title : 'Job'}</td>
+              <td>${a.job && a.job.employer ? a.job.employer.companyName : 'Company'}</td>
+              <td>${UI.getMatchBadge(Math.round(a.matchScore || 80))}</td>
+              <td><span class="badge bg-primary-subtle text-primary">${a.status}</span></td>
+              <td class="small text-muted">${UI.formatDate(a.appliedAt)}</td>
+            </tr>
+          `).join('');
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function toggleUser(id) {
+      try {
+        await Api.toggleUserStatus(id);
+        UI.showToast('User status updated', 'success');
+        loadAdminUsers();
+      } catch (err) {
+        UI.showToast(err.message, 'error');
+      }
+    }
+
+    async function deleteUser(id) {
+      if (!confirm('Are you sure you want to permanently delete this user account?')) return;
+      try {
+        await Api.deleteUser(id);
+        UI.showToast('User deleted', 'info');
+        loadAdminUsers();
+      } catch (err) {
+        UI.showToast(err.message, 'error');
+      }
+    }
+
+    async function updateJobStatus(jobId, status) {
+      try {
+        await Api.updateAdminJobStatus(jobId, status);
+        UI.showToast(`Job status changed to ${status}`, 'success');
+        loadAdminJobs();
+      } catch (err) {
+        UI.showToast(err.message, 'error');
+      }
+    }
+
+    loadAdminData();
+  </script>
+</body>
+</html>
