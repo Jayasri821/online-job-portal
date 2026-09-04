@@ -1,14 +1,25 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api';
+import { demoJobs } from '../demoJobs';
 
 export default function JobsPage() {
   const [jobs, setJobs] = useState([]);
   const [filters, setFilters] = useState({ keyword: '', location: '', jobType: '' });
 
   const load = async (next = filters) => {
-    const { data } = await api.get('/jobs', { params: next });
-    setJobs(data);
+    try {
+      const { data } = await api.get('/jobs', { params: next });
+      setJobs(data);
+    } catch {
+      const keyword = next.keyword.trim().toLowerCase();
+      const location = next.location.trim().toLowerCase();
+      setJobs(demoJobs.filter((job) => (
+        (!keyword || `${job.title} ${job.skills}`.toLowerCase().includes(keyword))
+        && (!location || job.location.toLowerCase().includes(location))
+        && (!next.jobType || job.jobType === next.jobType)
+      )));
+    }
   };
 
   useEffect(() => { load(); }, []);

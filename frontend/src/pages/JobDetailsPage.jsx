@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import api from '../api';
 import { useAuth } from '../AuthContext.jsx';
+import { demoJobs } from '../demoJobs';
 
 export default function JobDetailsPage() {
   const { id } = useParams();
@@ -13,7 +14,9 @@ export default function JobDetailsPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    api.get(`/jobs/${id}`).then((res) => setJob(res.data));
+    api.get(`/jobs/${id}`)
+      .then((res) => setJob(res.data))
+      .catch(() => setJob(demoJobs.find((demoJob) => demoJob.id === Number(id))));
   }, [id]);
 
   const apply = async (e) => {
