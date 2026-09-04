@@ -22,7 +22,15 @@ export default function RegisterPage() {
       login(data);
       navigate(form.role === 'RECRUITER' ? '/recruiter' : '/seeker');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
+      const users = JSON.parse(localStorage.getItem('demoUsers') || '[]');
+      if (users.some((user) => user.email === form.email)) {
+        setError('An account with this email already exists');
+        return;
+      }
+      const demoUser = { ...form, id: Date.now() };
+      localStorage.setItem('demoUsers', JSON.stringify([...users, demoUser]));
+      login({ token: `demo-${demoUser.id}`, userId: demoUser.id, ...demoUser });
+      navigate(form.role === 'RECRUITER' ? '/recruiter' : '/seeker');
     }
   };
 

@@ -10,7 +10,8 @@ export function AuthProvider({ children }) {
   });
 
   useEffect(() => {
-    if (!localStorage.getItem('token')) {
+    const token = localStorage.getItem('token');
+    if (!token || token.startsWith('demo-')) {
       return;
     }
     api.get('/auth/me')
